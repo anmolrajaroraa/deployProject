@@ -338,7 +338,7 @@ module.exports = ".csstoButton{\n    margin:1rem;\n    background-color:#fdd835;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"addDialogBox\">\n   \n<div class=\"heading\"><h1 >ADD NEW DATA</h1></div>\n<form id=\"form\" [formGroup]=\"demo\" (ngSubmit)=\"Add(demo.value)\">\n   <div>\n    <mat-form-field formArrayName=\"addarray\" *ngFor=\"let key of keyArray; let i=index\">\n        <mat-label>{{key}}</mat-label>\n        <input matInput placeholder=\"\" [formControlName]=\"i\" >\n    \n      \n      </mat-form-field></div>\n      <div>\n      <button mat-raised-button  class=\"csstoButton\" [disabled]=\"!demo.valid\">Submit</button>\n      <button mat-raised-button  type=\"button\" class=\"csstoButton\" (click)=\"Cancel()\">Cancel</button>\n    </div>\n</form>\n\n</div>\n\n"
+module.exports = "<div id=\"addDialogBox\">\r\n   \r\n<div class=\"heading\"><h1 >ADD NEW DATA</h1></div>\r\n<form id=\"form\" [formGroup]=\"demo\" (ngSubmit)=\"Add(demo.value)\">\r\n   <div>\r\n    <mat-form-field formArrayName=\"addarray\" *ngFor=\"let key of keyArray; let i=index\">\r\n        <mat-label>{{key}}</mat-label>\r\n        <input matInput placeholder=\"\" [formControlName]=\"i\" >\r\n    \r\n      \r\n      </mat-form-field></div>\r\n      <div>\r\n      <button mat-raised-button  class=\"csstoButton\" [disabled]=\"!demo.valid\">Submit</button>\r\n      <button mat-raised-button  type=\"button\" class=\"csstoButton\" (click)=\"Cancel()\">Cancel</button>\r\n    </div>\r\n</form>\r\n\r\n</div>\r\n\r\n"
 
 /***/ }),
 
@@ -479,7 +479,7 @@ module.exports = ".csstoButton{\n    margin:1rem;\n    background-color:#fdd835;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"addDialogBox\">\n<div class=\"heading\"><h1 >DELETE THE DATA</h1></div>\n<div id=\"form\">\n<h2>Are you sure you want to delete this Entry</h2>\n</div>\n<div>\n        <button mat-raised-button  class=\"csstoButton\" (click)=\"Delete()\">Delete</button>\n        <button mat-raised-button  type=\"button\" class=\"csstoButton\" (click)=\"Cancel()\">Cancel</button>\n</div>\n</div>"
+module.exports = "<div id=\"addDialogBox\">\r\n<div class=\"heading\"><h1 >DELETE THE DATA</h1></div>\r\n<div id=\"form\">\r\n<h2>Are you sure you want to delete this Entry</h2>\r\n</div>\r\n<div>\r\n        <button mat-raised-button  class=\"csstoButton\" (click)=\"Delete()\">Delete</button>\r\n        <button mat-raised-button  type=\"button\" class=\"csstoButton\" (click)=\"Cancel()\">Cancel</button>\r\n</div>\r\n</div>"
 
 /***/ }),
 
@@ -545,7 +545,7 @@ module.exports = ".csstoButton{\n    margin:1rem;\n    background-color:#fdd835;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"addDialogBox\">\n   \n        <div class=\"heading\"><h1 >EDIT THE DATA</h1></div>\n<form id=\"form\" [formGroup]=\"demo\" (ngSubmit)=\"Edit(demo.value)\">\n   <div>\n    <mat-form-field formArrayName=\"addarray\" *ngFor=\"let key of keyArray; let i=index\">\n        <mat-label>{{key}}</mat-label>\n        <input matInput placeholder=\"\" [formControlName]=\"i\" [value]='inputArray[i]' >\n\n      </mat-form-field>\n      </div>\n      <div>\n      <button mat-raised-button class=\"csstoButton\" [disabled]='demo.invalid'>Submit</button>\n      <button mat-raised-button  class=\"csstoButton\" type=\"button\" (click)=\"Cancel()\">Cancel</button>\n    </div>\n    </form>\n</div>\n\n"
+module.exports = "<div id=\"addDialogBox\">\r\n   \r\n        <div class=\"heading\"><h1 >EDIT THE DATA</h1></div>\r\n<form id=\"form\" [formGroup]=\"demo\" (ngSubmit)=\"Edit(demo.value)\">\r\n   <div>\r\n    <mat-form-field formArrayName=\"addarray\" *ngFor=\"let key of keyArray; let i=index\">\r\n        <mat-label>{{key}}</mat-label>\r\n        <input matInput placeholder=\"\" [formControlName]=\"i\" [value]='inputArray[i]' >\r\n\r\n      </mat-form-field>\r\n      </div>\r\n      <div>\r\n      <button mat-raised-button class=\"csstoButton\" [disabled]='demo.invalid'>Submit</button>\r\n      <button mat-raised-button  class=\"csstoButton\" type=\"button\" (click)=\"Cancel()\">Cancel</button>\r\n    </div>\r\n    </form>\r\n</div>\r\n\r\n"
 
 /***/ }),
 
@@ -764,6 +764,7 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [
     { path: '', component: _admin_component__WEBPACK_IMPORTED_MODULE_5__["AdminComponent"],
         children: [
+            { path: '', pathMatch: 'full', redirectTo: 'login' },
             { path: 'login', component: _login_login_component__WEBPACK_IMPORTED_MODULE_4__["adminloginComponent"] },
             { path: 'dashboard', component: _dashboardmodule_dashboard_component__WEBPACK_IMPORTED_MODULE_6__["DashboardComponent"],
             }
@@ -793,7 +794,7 @@ var routingComponents = [_admin_component__WEBPACK_IMPORTED_MODULE_5__["AdminCom
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n  \n#adminheader{\n    position: fixed;\n    z-index:10;\n    width:100%;\n    top:0px;\n}\n\n#content{\n    padding-top:6rem;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9hZG1pbk1vZHVsZS9hZG1pbi5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUdBO0lBQ0ksZ0JBQWdCO0lBQ2hCLFdBQVc7SUFDWCxXQUFXO0lBQ1gsUUFBUTtDQUNYOztBQUVEO0lBQ0ksaUJBQWlCO0NBQ3BCIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9hZG1pbk1vZHVsZS9hZG1pbi5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG5cbiAgXG4jYWRtaW5oZWFkZXJ7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHotaW5kZXg6MTA7XG4gICAgd2lkdGg6MTAwJTtcbiAgICB0b3A6MHB4O1xufVxuXG4jY29udGVudHtcbiAgICBwYWRkaW5nLXRvcDo2cmVtO1xufVxuIl19 */"
+module.exports = "\r\n\r\n  \r\n#adminheader{\r\n    position: fixed;\r\n    z-index:10;\r\n    width:100%;\r\n    top:0px;\r\n}\r\n\r\n#content{\r\n    padding-top:6rem;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9hZG1pbk1vZHVsZS9hZG1pbi5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUdBO0lBQ0ksZ0JBQWdCO0lBQ2hCLFdBQVc7SUFDWCxXQUFXO0lBQ1gsUUFBUTtDQUNYOztBQUVEO0lBQ0ksaUJBQWlCO0NBQ3BCIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9hZG1pbk1vZHVsZS9hZG1pbi5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXHJcblxyXG4gIFxyXG4jYWRtaW5oZWFkZXJ7XHJcbiAgICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgICB6LWluZGV4OjEwO1xyXG4gICAgd2lkdGg6MTAwJTtcclxuICAgIHRvcDowcHg7XHJcbn1cclxuXHJcbiNjb250ZW50e1xyXG4gICAgcGFkZGluZy10b3A6NnJlbTtcclxufVxyXG4iXX0= */"
 
 /***/ }),
 
@@ -804,7 +805,7 @@ module.exports = "\n\n  \n#adminheader{\n    position: fixed;\n    z-index:10;\n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id='adminheader'>\n<adminheader></adminheader>\n</div>\n<div id='content' >\n        <router-outlet></router-outlet>\n</div>\n"
+module.exports = "<div id='adminheader'>\r\n<adminheader></adminheader>\r\n</div>\r\n<div id='content' >\r\n        <router-outlet></router-outlet>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -3462,7 +3463,7 @@ module.exports = "#heading{\n    display: flex;\n    text-align: center;\n    \n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar id=\"heading\" color=\"primary\">\n  <span class='headingData'>DATA TABLE\n    </span>\n\n    <button  mat-raised-button type=\"button\" color='accent' (click)='pushChanges()'>Push Changes</button>\n\n  \n</mat-toolbar>\n\n\n\n<div style=\"width: 100\" class=\"example-container mat-elevation-z8\">\n\n\n  <mat-table #table [dataSource]=\"dataSource\" matSort class=\"mat-cell\">\n\n    <!--- Note that these columns can be defined in any order.\n          The actual rendered columns are set as a property on the row definition\" -->\n\n    <!-- ID Column -->\n    <ng-container *ngFor=\"let col of columns\" matColumnDef={{col}}>\n  \n      <mat-header-cell *matHeaderCellDef mat-sort-header>{{col | lowercase | titlecase}}</mat-header-cell>\n      <mat-cell  *matCellDef=\"let row\" ><button class='otherdata' mat-raised-button (click)=\"redirectToImageUpload(row,row['imageUrls'])\" [color]=\"primary\" *ngIf=\"col=='Other Data'\">Manage Data</button> <p *ngIf=\"col!='Other Data'\">{{row[col]}}</p></mat-cell>\n    \n    </ng-container>\n    \n    <ng-container matColumnDef=\"actions\">\n      <mat-header-cell *matHeaderCellDef>\n        <button mat-icon-button color=\"primary\" (click)=\"addNew(dataSource)\">\n          <mat-icon aria-label=\"Example icon-button with a heart icon\">add</mat-icon>\n        </button>\n      </mat-header-cell>\n\n      <mat-cell *matCellDef=\"let row; let i=index;\">\n        <button mat-icon-button color=\"accent\" (click)=\"startEdit(row,i,dataSource)\">\n          <mat-icon aria-label=\"Edit\">edit</mat-icon>\n        </button>\n\n        <button mat-icon-button color=\"accent\" (click)=\"deleteItem(row,i,dataSource)\">\n          <mat-icon aria-label=\"Delete\">delete</mat-icon>\n        </button>\n      </mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayedColumns;sticky: true\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n  </mat-table>\n  <div class=\"no-results\" [style.display]=\"(dataSource.length== 0 || dataSource==null) ? '' : 'none'\" >\n    No results\n  </div>\n\n</div>"
+module.exports = "<mat-toolbar id=\"heading\" color=\"primary\">\r\n  <span class='headingData'>DATA TABLE\r\n    </span>\r\n\r\n    <button  mat-raised-button type=\"button\" color='accent' (click)='pushChanges()'>Push Changes</button>\r\n\r\n  \r\n</mat-toolbar>\r\n\r\n\r\n\r\n<div style=\"width: 100\" class=\"example-container mat-elevation-z8\">\r\n\r\n\r\n  <mat-table #table [dataSource]=\"dataSource\" matSort class=\"mat-cell\">\r\n\r\n    <!--- Note that these columns can be defined in any order.\r\n          The actual rendered columns are set as a property on the row definition\" -->\r\n\r\n    <!-- ID Column -->\r\n    <ng-container *ngFor=\"let col of columns\" matColumnDef={{col}}>\r\n  \r\n      <mat-header-cell *matHeaderCellDef mat-sort-header>{{col | lowercase | titlecase}}</mat-header-cell>\r\n      <mat-cell  *matCellDef=\"let row\" ><button class='otherdata' mat-raised-button (click)=\"redirectToImageUpload(row,row['imageUrls'])\" [color]=\"primary\" *ngIf=\"col=='Other Data'\">Manage Data</button> <p *ngIf=\"col!='Other Data'\">{{row[col]}}</p></mat-cell>\r\n    \r\n    </ng-container>\r\n    \r\n    <ng-container matColumnDef=\"actions\">\r\n      <mat-header-cell *matHeaderCellDef>\r\n        <button mat-icon-button color=\"primary\" (click)=\"addNew(dataSource)\">\r\n          <mat-icon aria-label=\"Example icon-button with a heart icon\">add</mat-icon>\r\n        </button>\r\n      </mat-header-cell>\r\n\r\n      <mat-cell *matCellDef=\"let row; let i=index;\">\r\n        <button mat-icon-button color=\"accent\" (click)=\"startEdit(row,i,dataSource)\">\r\n          <mat-icon aria-label=\"Edit\">edit</mat-icon>\r\n        </button>\r\n\r\n        <button mat-icon-button color=\"accent\" (click)=\"deleteItem(row,i,dataSource)\">\r\n          <mat-icon aria-label=\"Delete\">delete</mat-icon>\r\n        </button>\r\n      </mat-cell>\r\n    </ng-container>\r\n\r\n    <mat-header-row *matHeaderRowDef=\"displayedColumns;sticky: true\"></mat-header-row>\r\n    <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n  </mat-table>\r\n  <div class=\"no-results\" [style.display]=\"(dataSource.length== 0 || dataSource==null) ? '' : 'none'\" >\r\n    No results\r\n  </div>\r\n\r\n</div>"
 
 /***/ }),
 
