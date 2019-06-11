@@ -3,6 +3,7 @@ const adschema = require('../schemas/adSchema');
 const getproducts= require('../../Utils/getProducts')
 const productSchema = require('../schemas/ProductSchema');
 const s3=require('../../Utils/multer/getImageFiles')
+const async = require('async')
 const adcrud={
     
   removeidvandreturnnew(obj){
@@ -196,13 +197,13 @@ pushAd(obj,res){
      }
  })
 }else if(obj.crud=='new'){
-    console.log(obj.crud)
+    //console.log(obj.crud)
     let subaddarray=[];
     for(let childobj of (obj.data).subAds){
         
         let paramarray=[];
         for(let param of childobj.params){
-            console.log(param)
+          //  console.log(param)
            let newparam= new adschema.params({
                 keyword:param.keyword,
                 value:param.value,
@@ -237,7 +238,7 @@ subaddarray.push(sub);
            res.status(403).json('DataBase Error');
        }
        else {
-           console.log('yo')
+         //  console.log('yo')
            res.status(200).json({'isAdded':true});
        }
    })
@@ -250,53 +251,87 @@ else{
 ,
 getAllAds(res){
     let arrayofAdCrud=[];
-    adschema.ads.find({},(err,ads)=>{
-        if(err){
-        res.status(403).json('Data Base Error');
-        }
-        else if(ads!=null){
-    try{
-            let adarray=[];
+    let adarray=[];
+    // adschema.ads.find({},(err,ads)=>{
+    //     if(err){
+    //     res.status(403).json('Data Base Error');
+    //     }
+    //     else if(ads!=null){
+    // try{
+           
             
-        ads.forEach(ad => {
-       adarray.push(this.removeidvandreturnnew(ad)); 
-        });
-        arrayofAdCrud.push({'adalready':adarray});
+    //     ads.forEach(ad => {
+    //    adarray.push(this.removeidvandreturnnew(ad)); 
+    //     });
+    //     arrayofAdCrud.push({'adalready':adarray});
           
-    productSchema.Products.find({},(err,products)=>{
-        if(err){
-            res.json("some error occures");
-        }
-        else{
-           // let array=[];
-          try{  
-         // array=getproducts.getProducts(products)
-           arrayofAdCrud.push({'productAd':products});
-           if(arrayofAdCrud.length!=0){
-            console.log('i m here')
-                res.status(200).json(arrayofAdCrud);
-            }
-            //logger.debug(products);
-          }catch(e){
-            res.status(403).json('Logical Error');
-            return;
-          }
+    // productSchema.Products.find({},(err,products)=>{
+    //     if(err){
+    //         res.json("some error occures");
+    //     }
+    //     else{
+    //        // let array=[];
+    //       try{  
+    //      // array=getproducts.getProducts(products)
+    //        arrayofAdCrud.push({'productAd':products});
+    //        if(arrayofAdCrud.length!=0){
+    //         console.log('i m here')
+    //             res.status(200).json(arrayofAdCrud);
+    //         }
+    //         //logger.debug(products);
+    //       }catch(e){
+    //         res.status(403).json('Logical Error');
+    //         return;
+    //       }
           
-        }})
+    //     }})
         
 
-    }
-      catch(e){
-          res.status(403).json('Logical Error')
-    return;
-      }
+    // }
+    //   catch(e){
+    //       res.status(403).json('Logical Error')
+    // return;
+    //   }
       
-    }
-    else {
-        res.status(403).json('No data Found');
-        return;
-    }
-    })
+    // }
+    // else {
+    //     res.status(403).json('No data Found');
+    //     return;
+    // }
+    // })
+
+
+    async.parallel([
+        //Load Ad
+        function(callback) {
+            adschema.ads.find({},(err,ads)=>{
+                    if(err) return callback(err);
+                    ads.forEach(ad => {
+                          adarray.push(adcrud.removeidvandreturnnew(ad)); 
+                            });
+                        arrayofAdCrud.push({'adalready':adarray});
+
+                callback();
+            });
+        },
+        //Load posts
+        function(callback) {
+            productSchema.Products.find({},(err,products)=>{
+                if (err) return callback(err);
+          arrayofAdCrud.push({'productAd':products});
+                callback();
+            });
+        }
+    ], function(err) { //This function gets called after the two tasks have called their "task callbacks"
+        if (err) {
+            res.status(500).json('Some Error Occurred')
+        };
+        if(arrayofAdCrud.length!=0){
+            res.status(200).json(arrayofAdCrud);
+           // console.log(arrayofAdCrud)
+        }
+       
+    });
   
 }
 

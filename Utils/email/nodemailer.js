@@ -1,5 +1,5 @@
-//const nodemailer = require("nodemailer");
-// const userTemplate=require('../utils/usertemplate');
+const nodemailer = require("nodemailer");
+ const userTemplate=require('./usertemplate');
 function mailUser(customerMailId,userName) {
     userTemplate(userName).then(data=> {
       var transporter = nodemailer.createTransport({

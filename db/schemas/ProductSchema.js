@@ -1,5 +1,5 @@
-const mongoose=require("mongoose");
-const connection=require("../connection");
+
+const mongoose=require("../connection");
 
 const Schema=mongoose.Schema;
 
@@ -18,6 +18,7 @@ const subProductSchema=new mongoose.Schema({
     subproductId:String,
     subproductName:String,
     info:{
+        brand:String,
         description:String,
         benefitsAndUses:String,
         priceAndAmount:[

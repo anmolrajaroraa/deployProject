@@ -14,7 +14,17 @@ const jwtVerification = require('../../Utils/jwt/jwtverify');      //secret key 
 const productCrud=require('../../db/crudOperations/Product'); 
 const adminCrud=require('../../db/crudOperations/adminCrud');
 const s3=require('../../Utils/multer/getImageFiles');
-const singleUpload=upload.fields([
+const addressCrud=require('../../db/crudOperations/addressCrud');
+const aboutUsOperations=require('../../db/crudOperations/aboutUsCrud');
+const addressModel=require('../../models/addressModel');
+const aboutObject=require('../../models/setterGetter/aboutUs');
+const SubTitleModel=require('../../models/subTitleModel');
+const singleUpload=upload.single('address');
+const footerOperations = require('../../db/crudOperations/footerOperations');
+const footerObject=require('../../models/footermodel');
+const titleListModel=require('../../models/titlelistmodel');
+const titlefootermodel=require('../../models/titlefootermodel');
+const multipleUpload=upload.fields([
     {
       name:'categories'
     },
@@ -30,12 +40,14 @@ const singleUpload=upload.fields([
         name:'priceAndAmount'
     }
     ]);        
+
+      
 //--naveen
 adminRoutes.post('/upload',function(req,res){
     /* dont mess with multer the req above and below are not even same*/
     var xlsxj; //Initialization
    
-    singleUpload(req,res,async function(err){
+    multipleUpload(req,res,async function(err){
         //jwt.verify(req.body.idToken,securekey,(error,authData)=>{     //checking if token is present or not
             //if(error){
             //    res.json("session timed out");
@@ -132,13 +144,15 @@ adminRoutes.post('/upload',function(req,res){
                                 subproductId:null,
                                 subproductName:null,
                                 info:{
+                                    brand:null,
                                     description:null,
                                     benefitsAndUses:null,
                                     priceAndAmount:[]
                                 },
                             }
                             subproduct1.subproductId=subproduct.subproductid;           //converted string into array and
-                            subproduct1.subproductName=subproduct.subproductname;       //defined structure
+                            subproduct1.subproductName=subproduct.subproductname;  
+                            subproduct1.info.brand=subproduct.brand;     //defined structure
                             subproduct1.info.description=subproduct.description;
                             subproduct1.info.benefitsAndUses=subproduct.benefitsanduses;
                             subProducts.push(subproduct1);
@@ -182,10 +196,10 @@ adminRoutes.post('/upload',function(req,res){
            
             subcategory=joinSubcategory(subcategory,products);
             var finalJson=joinExcelData(categories,subcategory);
-         //   res.json(finalJson);
+           //res.status(200).json(finalJson);
            
            
-           productCrud.uploadProducts(req,res,finalJson);
+         productCrud.uploadProducts(req,res,finalJson);
             }
             
 
@@ -263,7 +277,7 @@ adminRoutes.post('/imageUpload',(req,res)=>{
                 jwt.verify(req.body.idToken,jwtVerification.adminSecurekey,(error,authData)=>{
                     
                     if(error){
-                        res.status(401).json("Session TimeOut ,Please login again");
+                    res.status(401).json("Session TimeOut ,Please login again");
                     }
                     else{
                         if(err){
@@ -308,23 +322,32 @@ adminRoutes.post('/imageDelete',jwtVerification.verifyToken,(req,res)=>{
 
 //--milan
 adminRoutes.post('/login',async function(req,res){
-    var adminData= await adminCrud.login(res,{'id':req.body.id, 'name':req.body.name, 'password':req.body.password});
-    console.log(adminData);
-   if(adminData!=null){
+    var adminData= await adminCrud.login({'id':req.body.id, 'name':req.body.name, 'password':req.body.password});
+ //console.log(adminData)
+ 
+     if(adminData!=null){
+    if(req.body.password == adminData.password){
         jwt.sign({adminData},jwtVerification.adminSecurekey,{expiresIn:'10000s'},(err,token)=>{ 
-                     //token is generated after checking the presence of user
-        res.json({
-            token:token
-        })
-    })
-}else{
-    res.status(401).json('Incorrect Id/Password');
+            //token is generated after checking the presence of user
+            if(err){
+                res.status(500).json(err);
+            }
+            else{
+res.json({
+   token:token
+})
+}})}else{   
+     res.status(401).json('Incorrect Password');
+
+}}else{
+    res.status(401).json('No Such Entry Found');
 }
 
-})
+    })
+      
 //--milan
 adminRoutes.get('/getUnverifiedEmployee',jwtVerification.verifyToken,(req,res)=>{
-    console.log('i  m unverifiied');
+  //  console.log('i  m unverifiied');
     jwt.verify(req.token,jwtVerification.adminSecurekey,(error,authData)=>{
             
         if(error){
@@ -339,7 +362,7 @@ adminRoutes.get('/getUnverifiedEmployee',jwtVerification.verifyToken,(req,res)=>
 //--milan
 
 adminRoutes.get('/getVerifiedEmployee',jwtVerification.verifyToken,(req,res)=>{
-    console.log('i m here verify')
+   // console.log('i m here verify')
     jwt.verify(req.token,jwtVerification.adminSecurekey,(error,authData)=>{
             
         if(error){
@@ -380,7 +403,7 @@ adminRoutes.post('/pushAd',jwtVerification.verifyToken,(req,res)=>{
             res.status(401).json("Session TimeOut ,Please login again");
         }
         else{
-            console.log('i m here');
+        //    console.log('i m here');
            let obj ={'crud':req.body.crud,'data':req.body.data,'oldref':req.body.oldref};
    adcrud.pushAd(obj,res);
 }
@@ -407,27 +430,165 @@ adminRoutes.post('/adDelete',jwtVerification.verifyToken,(req,res)=>{
         if(error){
             res.status(401).json("Session TimeOut ,Please login again");
         }else{
-         console.log(req.body.crud,req.body.category);
+       //  console.log(req.body.crud,req.body.category);
             var obj={'crud':req.body.crud,'data':req.body.category};
             adcrud.deleteAd(obj,res);
         }})
 })
 
-//--Milan
+//operations for address management
+adminRoutes.post('/bulkAddUpload',(req,res)=>{
+    singleUpload(req,res,function(err){
+        if(err instanceof multer.MulterError){
+            console.log(err);
+        }else if(err){
+            //console.log(req.file)
+            res.json(err);    
+        }
+        //console.log(req);
+        if(req.file.originalname.split('.')[req.file.originalname.split('.').length-1] === 'xlsx'){
+            exceltojson = xlsxtojson;
+        } else {
+            exceltojson = xlstojson;
+        }
 
-function verifyToken(req,res,next){               //checking for webtoken in the header of req and filling it into req.token
-    let bearerHeader = req.headers['authorization'];
-    
-    if(typeof bearerHeader!= 'undefined'){
-    const bearer = bearerHeader.split(' ');
-    const bearerToken = bearer[1];
-    req.token= bearerToken;
-    next();
-    
-    }else{
-        res.status(403).json('Session TimeOut ,Please login again');
+        try {
+            exceltojson({
+                input: req.file.path,
+                output: null, //since we don't need output.json
+                lowerCaseHeaders:true
+            }, function(err,result){
+                if(err) {
+                    return res.json({error_code:1,err_desc:err, data: null});
+                } 
+                console.log(result);
+                //do whatever you want
+                for(let data of result){
+                    let object={
+                        city:data.city,
+                        areaId:idGen.idgenerator(data.pincode),
+                        areaName:data.areaname,
+                        pincode:data.pincode,
+                        status:data.status
+                    }
+                    addressCrud.addAddress(object);
+                }
+                res.json({error_code:0,err_desc:null, data: result});
+            });
+        } catch (e){
+            logger.debug('some error occured during adding new address inside multer');
+            res.json({error_code:1,err_desc:"Corupted excel file"});
+        }
+    })
+})
+
+adminRoutes.post('/singleAddCrud',jwtVerification.verifyToken,(req,res)=>{
+    jwt.verify(req.token,jwtVerification.adminSecurekey,(error,authData)=>{
+            
+        if(error){
+            res.status(401).json("Session TimeOut ,Please login again");
+        }else{
+    if(req.body.optype=='add'){
+        // let object={
+        //     city:req.body.city,
+        //     areaId:idGen.idgenerator(req.body.pincode),
+        //     areaName:req.body.areaName,
+        //     pincode:req.body.pincode,
+        //     status:req.body.status
+        // }
+        let object=new addressModel(req.body.city,idGen.idgenerator(req.body.pincode),
+                        req.body.areaName,req.body.pincode,req.body.status);
+        addressCrud.addAddress(object);
     }
-}
+    else if(req.body.optype=='delete'){
+       
+        let object=new addressModel(req.body.city,req.body.areaId,
+                        req.body.areaName,req.body.pincode,req.body.status)
+        addressCrud.deleteAddress(object);
+    }
+    else if(req.body.optype=='edit'){
+
+        let object=new addressModel(req.body.city,req.body.areaId,
+                        req.body.areaName,req.body.pincode,req.body.status)
+        addressCrud.updateAddress(object);
+    }}
+  })
+})
+//footer data management by admin
+adminRoutes.post('/saveabout',jwtVerification.verifyToken,(req,res)=> {
+    jwt.verify(req.token,jwtVerification.adminSecurekey,(error,authData)=>{
+            
+        if(error){
+            res.status(401).json("Session TimeOut ,Please login again");
+        }else{
+    console.log(req.body);
+    // for(let key in aboutObject) {
+            // if(key=="aboutTitle"){
+            let aboutTitle=aboutObject.aboutTitle;
+            aboutTitle.titleName=req.body.titleName;
+            let titleParagraph=aboutTitle.titleParagraph[0];
+            titleParagraph.paragraph=req.body.titleParagraph.paragraph;
+            titleParagraph.lists=req.body.titleParagraph.lists;
+            let aboutSubTitle=aboutObject.aboutSubTitle;
+            if(aboutSubTitle.length>0) {
+                aboutSubTitle.length=0;
+            }
+            let bodyAboutSubTitle=req.body.aboutSubTitle;
+                var subTitleName= bodyAboutSubTitle.subTitleName;
+                var subTitleParagraphs= bodyAboutSubTitle.subTitleParagraphs;
+                var objectSub=new SubTitleModel(subTitleName,subTitleParagraphs);
+                aboutSubTitle.push(objectSub);
+            
+            // break;
+        // }
+    // }
+    aboutUsOperations.uploadData(aboutObject,res);
+    // aboutSubTitle.length=0;
+        }})
+});
+adminRoutes.get('/getaboutdata',(req,res)=> {
+    //console.log("Inside GetAbout")
+    aboutUsOperations.getAboutData(res);
+})
+
+
+
+adminRoutes.post('/savefooter',jwtVerification.verifyToken,(req,res)=> {
+    jwt.verify(req.token,jwtVerification.adminSecurekey,(error,authData)=>{
+            
+        if(error){
+            res.status(401).json("Session TimeOut ,Please login again");
+        }else{
+    let titleFooterPrevious=footerObject.titleFooter;
+    if(titleFooterPrevious.length>0) {
+        titleFooterPrevious.length=0;
+    }
+    let titleFooter=req.body.titleFooter;
+    titleFooter.forEach((eachFooterTitle)=> {
+        let titleList=[];
+        let titleName=eachFooterTitle.titleName;
+        let titleListArray=eachFooterTitle.titleList;
+        titleListArray.forEach((listItem)=> {
+                for(let key in listItem) {
+                    if(key=="listName"){
+                        var listName=listItem[key];
+                    }
+                    else {
+                        var listLink=listItem[key];
+                    }
+                }
+                let listObject=new titleListModel(listName,listLink);
+                titleList.push(listObject);
+        });
+        let titleFooterObject=new titlefootermodel(titleName,titleList);
+        titleFooterPrevious.push(titleFooterObject);
+    });
+    footerOperations.uploadFooterData(footerObject,res);
+        }})
+});
+
+
+
 //--naveen
 function wait(ms) {
     return new Promise((resolve, reject) => {

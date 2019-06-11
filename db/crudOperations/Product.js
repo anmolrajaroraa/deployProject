@@ -74,6 +74,7 @@ const ProductCrud={
                                                                   subproductId:obj3.subproductId,
                                                                   subproductName:obj3.subproductName,
                                                                   info:{
+                                                                      brand:obj3.info.brand,
                                                                       description:obj3.info.description,
                                                                       benefitsAndUses:obj3.info.benefitsAndUses,
                                                                       priceAndAmount:priceArray,
@@ -119,6 +120,7 @@ const ProductCrud={
     },
 
     editProducts(req,res){
+        let isFound=false;
         console.log('i m  here edit',req.body)
         Products.Products.findOne({categoryId:req.body.stackTrace[0]},(error,object)=>{
             if(object!=null){
@@ -128,17 +130,19 @@ const ProductCrud={
                         if(product.productId==req.body.stackTrace[2]){
                             for(let subproduct of product.subProducts){
                                 if(subproduct.subproductId==req.body.stackTrace[3]){
+                                    subproduct.info.brand=req.body.brand;
                                     subproduct.info.description=req.body.description;
                                     subproduct.info.benefitsAndUses=req.body.benefitsAndUses;
                                     subproduct.info.priceAndAmount=req.body.priceAndAmount;
                                    console.log(subproduct.info.priceAndAmount)
+                                   isFound=true;
                                 }
                             }
                         }
                     }
                 }
             }
-            
+            if(isFound==true){
             object.save((err)=>{
                 if(err){
                     res.status(403).json(err)
@@ -150,7 +154,9 @@ const ProductCrud={
                 }
             })
             
-        }
+        }else{
+            res.status(409).json('Invalid Stack Trace');
+        }}
     else{
         res.status(403).json('No Such Object Found');
     }
@@ -159,7 +165,8 @@ const ProductCrud={
 //naveen
     imageUpload(req,res,result){
         console.log(req.body,result)
-        //db.inventory.find( { "size.uom": "in" } )   
+        //db.inventory.find( { "size.uom": "in" } )  
+        let isFound=false; 
         Products.Products.findOne({categoryId:req.body.categoryId},(error,object)=>{
             if(object!=null){
             for(let subcategory of object.subcategory){
@@ -167,10 +174,9 @@ const ProductCrud={
                     for(let product of subcategory.products){
                         if(product.productId==req.body.productId){
                             for(let subproduct of product.subProducts){
-                                if(subproduct.subproductId==req.body.subproductId){
-                                
-                                    
+                                if(subproduct.subproductId==req.body.subproductId){    
                                     subproduct.imageUrls.push(result);
+                                    isFound=true;
                                   
                                 }
                             }
@@ -178,6 +184,7 @@ const ProductCrud={
                     }
                 }
             }
+if(isFound==true){
             object.save((err)=>{
                 if(err){
                     res.status(409).json('Some Database Error Ocurred')
@@ -188,7 +195,9 @@ const ProductCrud={
                 }
             })
             
-         }else{
+        }else{
+            res.status(403).json('Invalid StackTrace');
+        } }else{
              res.status(403).json('Invalid StackTrace')
          } })
     },
@@ -275,18 +284,94 @@ const ProductCrud={
               
                 //console.log(modProducts[0].subcategory[0].products[0].subProducts);
                 //logger.debug("hi");
-                res.status(200).json(products);
+               res.status(200).json(products);
+            // res.status(200).json([]);
             }
             
         })
+    },
+    filterParam(obj,category,subcategoryName){
+       
+        let subcategory=[];
+for(let i=0;i<category.subcategory.length;i++){
+    if(subcategoryName==category.subcategory[i].subcategoryName){
+       let subC= category.subcategory[i];
+      let productArray=[];
+       for(let j=0;j<subC.products.length;j++){
+        ////   console.log('yes here')
+        let isFound=false;
+           let prod= subC.products[j];
+           let subproductArray=[];
+           for(let k=0;k<prod.subProducts.length;k++){
+              // console.log('inside subproducts')
+               let inSubprod=false;
+               let subprod=prod.subProducts[k];
+               let valuesArray=[];
+               for(let l=0;l<subprod.info.priceAndAmount.length;l++){
+                 //  console.log(subprod.info.priceAndAmount[l])
+                if(subprod.info.priceAndAmount[l].instock=='true'){
+                    let matchedValueIndex;
+                    let keyindex;
+                   let values=subprod.info.priceAndAmount[l];
+                   for(let key in obj){
+                       keyindex=0;
+                        matchedValueIndex=0;
+                    //    console.log(obj[key],values[key])
+                       if(values[key]==obj[key]){
+                      //     console.log('inside');        //main filtering logic later changed
+                        matchedValueIndex++;
+                        inSubprod=true;
+                       }
+                       keyindex++;
+                   }
+                 //  console.log(matchedValueIndex,keyindex);
+              if(matchedValueIndex==keyindex){
+                  isFound=true;
+                  valuesArray.push(values);
+              }
+
+                }  
+                
+
+               }
+               
+               subprod.info.priceAndAmount=valuesArray;    //new filtered priceAndAmount
+       if(inSubprod==true){
+    subproductArray.push(subprod);
+     }
+   
+
+
+           }  
+           prod.subProducts=subproductArray  //new subarray with new PriceAndAmount
+           if(isFound==true){
+productArray.push(prod)
+           }
+
+       }
+subC.products=productArray;
+subcategory.push(subC); // subcategory New
+    }
+    
+}
+
+category.subcategory=subcategory;
+
+
     }
 ,
 searchsp(req,res){
-Products.Products.findOne({'categoryName':req.body.category,'subcategory.subcategoryName':req.body.subcategory},(err,products)=>{
+    let subcategoryName=req.body.subcategory;
+    
+Products.Products.findOne({'categoryName':req.body.category,'subcategory.subcategoryName':subcategoryName},(err,products)=>{
     if(err){
         res.status(409).json('Some Error Occured');
     }
     else{
+       // console.log(req.body.params)
+        if(req.body.params!=null){
+           if(Object.keys(req.body.params).length!=0){
+        this.filterParam(req.body.params,products,subcategoryName); }}
 // let returnproductarray=[];
 // let samplearray=[];
 // samplearray.push(products);

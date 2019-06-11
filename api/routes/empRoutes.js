@@ -47,9 +47,12 @@ empRoutes.post('/register',(req,res)=>{
                 }
             }
         }
-        nullChecker.check(req.body.mobile_no,res);
+        
+       // nullChecker.check(req.body.mobile_no,res);
         object.mobile_no=req.body.mobile_no;
-        object.selfReferralCode=refCodeGen.refCodeGen(req.body.mobile_no);
+      
+        object.selfReferralCode=refCodeGen.idgenerator(req.body.mobile_no);
+       
         object.email=req.body.email;
         object.qualification=req.body.qualification;
         object.referralCode=req.body.refferalCode;
@@ -65,22 +68,22 @@ empRoutes.post('/register',(req,res)=>{
         object.documents[0].pancardno=req.body.documents.pancardno;
         object.documents[0].bankacno=req.body.documents.bankacno;
         object.documents[0].nomineeAdhno=req.body.documents.nomineeAdhno;*/
-        for(let key in object.documents[0]){
-            if(req.body.documents!=null){
+     
                 for(let keyreq in req.body.documents){
                     if(keyreq!=null){
-                        if(key==keyreq){
-                            object.documents[0][key]=req.body.documents[keyreq];
+                        if(req.body.documents[keyreq]!=''){
+                            object.documents[0][keyreq]=req.body.documents[keyreq];
+                        }else{
+                            object.documents[0][keyreq]=null;
                         }
                     }
                 }
-            }
-        }
+         
       
         for(let key in object.ImageUrls[0]){
                       if(req.body.filesurl!=null){ 
                       req.body.filesurl.forEach(obj=>{
-                          console.log(obj);
+                         // console.log(obj);
                         for(let filekey in obj){
                          
                             if(filekey!=null){
@@ -93,7 +96,7 @@ empRoutes.post('/register',(req,res)=>{
      }
                                    
        
-        console.log(req.body.date_of_birth);
+      //  console.log(req.body.date_of_birth);
 
         empCrud.doRegister(req,res,object);
 
@@ -106,20 +109,20 @@ empRoutes.post("/upload",(req,res)=>{
         console.log("trying to upload");
         upload.upload(req,res,function(err){
             if(err instanceof multer.MulterError){
-                console.log("hi"+err);
+            //    console.log("hi"+err);
                 logger.debug('multer error occured',err);
                 res.status(500).json(err);
             }
             else if(err){
-                console.log(err);
+           //console.log(err);
                 logger.debug('some error occured',err);
                 res.status(500).json(err);
     
                 
             }
             
-            console.log(req.files);
-            console.log("trying to upload file");
+          //  console.log(req.files);
+          //  console.log("trying to upload file");
             logger.debug('trying to upload files');
             if(req.files!=null){
             upload.files.imageUrls.forEach(uploadObj=>{
@@ -145,7 +148,7 @@ empRoutes.post("/upload",(req,res)=>{
                res.status(500).json("please provide the mobile no");
            }
            else{
-           console.log(upload.files);
+          // console.log(upload.files);
            
             res.json(upload.files);
            }            
