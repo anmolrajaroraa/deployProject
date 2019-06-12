@@ -1647,6 +1647,9 @@ var AdspageComponent = /** @class */ (function () {
                     }
                 });
             }
+            else {
+                alert('No Product Data');
+            }
         });
     };
     AdspageComponent.prototype.sendcategoryName = function (array) {
