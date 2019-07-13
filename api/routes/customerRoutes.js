@@ -6,6 +6,7 @@ const customer= require('../../models/setterGetter/customer.model')
 const orderCrud= require('../../db/crudOperations/orderCrud');
 const order= require('../../models/setterGetter/order.model');
 const jwt=require('jsonwebtoken');
+const delivDetailCrud= require('../../db/crudOperations/deliveryCrud');
 const checkAddress=require('../../Utils/middleware/checkaddress')
 const passwordEncryptor=require('../../Utils/passwordEncryptor');
 const jwtVerification = require('../../Utils/jwt/jwtverify');
@@ -14,13 +15,38 @@ const config = require("../../Utils/statusconfig");
 const checkQuantity=require('../../Utils/middleware/checkQuantity');
 const cartOperations = require('../../db/crudOperations/cartCrud');
 const respmsg= require('../../Utils/comments');
-const checkOrder=require('../../Utils/middleware/checkOrder')
+const checkOrder=require('../../Utils/middleware/checkOrder');
+const delLevelCrud=require('../../db/crudOperations/delivLevelCrud');
+
+
+customerRoutes.post('/checkOrderAddressOTP',jwtVerification.verifyToken,(req,res)=> {
+    // let stackTrace=req.body.stackTrace;
+    jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
+        if(err){
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
+        }else{
+            console.log(req.body);
+    customerCrud.checkOrderAddressOTP(req.body.otp,res);
+}
+})
+})
+
+customerRoutes.get('/createOrderAddressOTP',jwtVerification.verifyToken,(req,res)=> {
+    // let stackTrace=req.body.stackTrace;
+    jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
+        if(err){
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
+        }else{
+    customerCrud.createOrderAddressOTP(authData.userobj,res);
+}
+})
+})
 
 customerRoutes.post('/cart/addProduct',jwtVerification.verifyToken,checkQuantity,(req,res)=> {
     // let stackTrace=req.body.stackTrace;
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
           
             if(req.body.crud=='add') {
@@ -31,12 +57,21 @@ customerRoutes.post('/cart/addProduct',jwtVerification.verifyToken,checkQuantity
             }
         }
     })
-   
 });
+
+customerRoutes.get('/voucher/getVouchers',jwtVerification.verifyToken,(req,res)=>{
+    jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
+        if(err){
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
+        }else{
+           orderCrud.getAllVouchers(res);
+        }})
+})
+
 customerRoutes.get('/cart/getCartData',jwtVerification.verifyToken,(req,res)=>{
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
             cartOperations.getCartData(authData.userobj.customerId,res);
         }})
@@ -45,11 +80,11 @@ customerRoutes.get('/cart/getCartData',jwtVerification.verifyToken,(req,res)=>{
 customerRoutes.post('/cart/deleteProduct',jwtVerification.verifyToken,(req,res)=> {
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
             if(req.body.crud =='del'){
                 let currentquantity = req.body.cartProduct.quantity;
-                cartOperations.decreaseQuantity(req.body.cartProduct,currentquantity,res);
+                cartOperations.decreaseQuantity(req.body.cartProduct,authData.userobj,currentquantity,res);
             }
 
         }
@@ -58,12 +93,12 @@ customerRoutes.post('/cart/deleteProduct',jwtVerification.verifyToken,(req,res)=
 customerRoutes.post('/cart/deletecartProduct',jwtVerification.verifyToken,(req,res)=> {
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
            console.log(req.body);
             if(req.body!=null){
                 if(req.body.cartProductId!=null){
-                    cartOperations.deleteParticularItem(req.body.cartProductId,res);
+                    cartOperations.deleteParticularItem(req.body.cartProductId,authData.userobj,res);
                 }
             }
         }})
@@ -73,7 +108,7 @@ customerRoutes.post('/cart/deletecartProduct',jwtVerification.verifyToken,(req,r
 customerRoutes.post('/setCurrAdd',jwtVerification.verifyToken,(req,res)=> {
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
             if(req.body.addId!=null){
 customerCrud.setCurrentAdd(authData.userobj,req.body.addId,res);
@@ -89,37 +124,62 @@ customerCrud.setCurrentAdd(authData.userobj,req.body.addId,res);
 customerRoutes.post('/cart/emptycart',jwtVerification.verifyToken,(req,res)=> {
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
            console.log(req.body);
             if(req.body!=null){
               
                     let array= req.body.cartIdArray;
-                    cartOperations.emptyWholeCart(array,res);
-                
+                    if(array!=null){
+                    cartOperations.emptyWholeCart(array,authData.userobj,res);
+                    }else{
+                        res.status(409).json({status:config.EMPTY,message:'Empty cart'})
+                    }
             }
         }})
 
 });
 
-customerRoutes.get('/getOngoingOrder',jwtVerification.verifyToken,(req,res)=> {
+customerRoutes.get('/getOngoingOrder',jwtVerification.verifyToken,(req,res)=> { //get all incompleted orders of customer
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-res.status(409).json({status:config.ERROR,message:'JWT Error'})
+res.status(409).json({status:config.ERROR,message:'Session TimeOut'})
         }else{
-            console.log('here');
+          //  console.log('here');
 orderCrud.getOrder(authData.userobj,false,res);
         }
     })
 })
 
-customerRoutes.get('/order/orderSum',jwtVerification.verifyToken,(req,res)=> {
+
+customerRoutes.post('/getSTDelivDetails',(req,res)=>{
+  
+                   delivDetailCrud.getStandardDeliveryDetails(req.body.id,res);
+    
+})
+
+customerRoutes.post('/getEXPDelivDetails',(req,res)=>{
+   
+                   delivDetailCrud.getExpressDeliveryDetails(req.body.id,res);
+        
+})
+
+customerRoutes.post('/getSingleLevel',jwtVerification.verifyToken,(req,res)=> {
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
-            console.log('here');
-orderCrud.orderSum(authData.userobj,res);
+            delLevelCrud.getDeliveryAndSingleLevel(req.body,res);
+            
+        }})})
+
+customerRoutes.post('/order/orderSum',jwtVerification.verifyToken,(req,res)=> {
+    jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
+        if(err){
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
+        }else{
+          //  console.log('here');
+orderCrud.orderSum(authData.userobj,req.body.voucherCode,res);
         }
     })
 }),
@@ -127,27 +187,37 @@ orderCrud.orderSum(authData.userobj,res);
 customerRoutes.post('/order/placeOrder',jwtVerification.verifyToken,checkOrder,(req,res)=> {
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
-    orderCrud.addOrder(req.order,authData.userobj,res);
+    orderCrud.addOrder(req.order,req.timeAndTypeSlot,authData.userobj,res);
 }})
 })
 
 customerRoutes.post('/filldetails',jwtVerification.verifyToken,checkAddress,(req,res)=>{
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
            // console.log(authData.userobj,req.addressobj,req.mobile_no)
         customerCrud.filldetails(authData.userobj,req.addressobj,req.isdefault,res)
         }
 })
 })
+customerRoutes.post('/order/singleOrder',jwtVerification.verifyToken,(req,res)=>{  //single order based on param
+    jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
+        if(err){
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
+        }else{
+            orderCrud.getSingleOrder(req.body.orderId,authData.userobj,res);
+       
+        }
+    })
+    })
 
 customerRoutes.get('/getAddressData',jwtVerification.verifyToken,(req,res)=>{
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
           
             customerCrud.getCustomerAddress(authData.userobj,res);
@@ -158,7 +228,7 @@ customerRoutes.get('/getAddressData',jwtVerification.verifyToken,(req,res)=>{
 customerRoutes.get('/getProfileData',jwtVerification.verifyToken,(req,res)=>{
     jwt.verify(req.token,jwtVerification.custSecurekey,(err,authData)=>{
         if(err){
-            res.status(409).json({status:config.ERROR,message:'JWT Error'});
+            res.status(409).json({status:config.ERROR,message:'Session TimeOut'});
         }else{
           
             customerCrud.getData(authData.userobj,res);

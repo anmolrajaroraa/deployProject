@@ -65,8 +65,10 @@ function checkFileType(file,cb){
     },
     key: function(req, file, cb){
       //files[file.fieldname]=true;
+      console.log(req.body);
       files.mobile_no=req.body.mobile_no;
-        cb(null,file.fieldname +' '+req.body.mobile_no);  }
+      files.type=req.body.type;
+        cb(null,file.fieldname +' '+req.body.mobile_no + req.body.type);  }
   }),
   limits:{fileSize:2000000},
   fileFilter:function(res,file,cb){

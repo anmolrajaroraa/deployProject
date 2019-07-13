@@ -8,7 +8,7 @@ const idGen=require('../../Utils/idGenerator/idGen');
 const nullChecker=require('../../Utils/nullChecker');
 const refCodeGen=require('../../Utils/referralGen/referralCode');
 const passwordEncryptor=require('../../Utils/passwordEncryptor');
-
+const empschema = require('../../db/schemas/empSchema')
 
  
 //var empCrud=require("../../db/crudOperations/employee");
@@ -101,61 +101,77 @@ empRoutes.post('/register',(req,res)=>{
         empCrud.doRegister(req,res,object);
 
 });
+empRoutes.post('/checkUser',(req,res)=>{
+    console.log(req.body.mobile_no);
+    if(req.body.mobile_no!=null){
+        empschema.findOne({mobile_no:req.body.mobile_no},(err,doc)=>{
+            if(err){
+                res.status(409).json(err);
+                        }else if(doc!=null){
+res.status(409).json({message:'User Already Exist'})
+                        }else{
+                            res.status(200).json({isPresent:false})
+                        }
+        })
+    }else{
+        res.status(409).json('Null Mobile No')
+    }
+})
 
 
 //--naveen
 empRoutes.post("/upload",(req,res)=>{
 
-        console.log("trying to upload");
-        upload.upload(req,res,function(err){
-            if(err instanceof multer.MulterError){
-            //    console.log("hi"+err);
-                logger.debug('multer error occured',err);
-                res.status(500).json(err);
-            }
-            else if(err){
-           //console.log(err);
-                logger.debug('some error occured',err);
-                res.status(500).json(err);
     
+            upload.upload(req,res,function(err){
+                if(err instanceof multer.MulterError){
+                //    console.log("hi"+err);
+                    logger.debug('multer error occured',err);
+                    res.status(500).json(err);
+                }
+                else if(err){
+               //console.log(err);
+                    logger.debug('some error occured',err);
+                    res.status(500).json(err);
+        
+                    
+                }else{
                 
-            }
-            
-          //  console.log(req.files);
-          //  console.log("trying to upload file");
-            logger.debug('trying to upload files');
-            if(req.files!=null){
-            upload.files.imageUrls.forEach(uploadObj=>{
-            for(let ukeys in uploadObj){
-              
-               for(let key in req.files){
-                if(key==ukeys){
-                uploadObj[ukeys]=req.files[key][0].location; 
-            }
-      
-          };
-    }
-    })
-             
-            }
-            else{
-                logger.debug('error during file upload');
-                res.status(403).json({err:"couldnt upload files"});
-            }
-           // upload.files.id=req.files;
-           upload.files.id=idGen.idgenerator(req.body.mobile_no);
-           if(upload.files.id==null){
-               res.status(500).json("please provide the mobile no");
-           }
-           else{
-          // console.log(upload.files);
-           
-            res.json(upload.files);
-           }            
-
-    
-     
+              //  console.log(req.files);
+              //  console.log("trying to upload file");
+                logger.debug('trying to upload files');
+                if(req.files!=null){
+                upload.files.imageUrls.forEach(uploadObj=>{
+                for(let ukeys in uploadObj){
+                  
+                   for(let key in req.files){
+                    if(key==ukeys){
+                    uploadObj[ukeys]=req.files[key][0].location; 
+                }
+          
+              };
+        }
         })
+                 
+                }
+               
+               // upload.files.id=req.files;
+               upload.files.id=idGen.idgenerator(req.body.mobile_no);
+               if(upload.files.id==null){
+                   res.status(500).json("please provide the mobile no");
+               }
+               else{
+               console.log(upload.files);
+               
+                res.json(upload.files);
+               }   
+            }         
+    
+        
+         
+            })
+        
+      
 }); 
     
     

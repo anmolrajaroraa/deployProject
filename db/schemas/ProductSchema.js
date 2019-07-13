@@ -5,9 +5,9 @@ const Schema=mongoose.Schema;
 
 const priceAndAmountSchema=new mongoose.Schema({
     
-    amount:String,
+    amount:Number,
     suffix:String,
-    price:String,
+    price:Number,
     discount:String,
     instock:String
 
@@ -15,9 +15,17 @@ const priceAndAmountSchema=new mongoose.Schema({
 
 
 const subProductSchema=new mongoose.Schema({
+    categoryId:String,
+    subcategoryId:String,
+    productId:String,
+    categoryName:String,
+    subcategoryName:String,
+    productIdName:String,
+
     subproductId:String,
     subproductName:String,
     info:{
+        isExpress:{type:Boolean,default:false},
         brand:String,
         description:String,
         benefitsAndUses:String,

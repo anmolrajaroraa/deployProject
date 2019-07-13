@@ -1,6 +1,7 @@
 const comments={
 isalreadypresent:'User Already Exist',
-notUserFound:'No User Found'
+notUserFound:'No User Found',
+emptyCart:'Cart is Empty'
 
 }
 

@@ -7,7 +7,7 @@ class order{
 }
 class cart{
     constructor()
-    {cartId=null
+    {cartProductId=null
 }
 }
 class voucher{

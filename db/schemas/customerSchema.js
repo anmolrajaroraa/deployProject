@@ -5,7 +5,7 @@ const orderSchema= new mongoose.Schema({
     completed:{type:Boolean,default:false}
 })
 const cartSchema = new mongoose.Schema({
-cartId:String
+cartProductId:String
 })
 
 const voucher = new mongoose.Schema({
