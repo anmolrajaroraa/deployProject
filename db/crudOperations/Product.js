@@ -142,6 +142,20 @@ const ProductCrud={
         }
     },
 
+    getSubproduct(id,res){
+      //  console.log(id);
+        Products.SubProduct.findOne({subproductId:id},(err,doc)=>{
+            if(err){
+                res.status(409).json({status:config.ERROR,message:'DB Error'});
+            }else if(doc==null){
+res.status(409).json({status:config.EMPTY,message:'No Data Found'});
+            }else{
+                res.status(200).json({status:config.SUCCESS,subproduct:doc});
+            }
+        })
+    }
+    ,
+
     async uploadProducts(req,res,categories,subcategories,products,subProducts){
         // try{
         // var session= await Products.Products.startSession();

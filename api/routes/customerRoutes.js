@@ -261,6 +261,9 @@ if(passwordEncryptor.verifyPassword(loginObj.password,userobj.password)==true){
 }
 })
 
+
+
+
 customerRoutes.post('/auth/signup',async (req,res)=>{
     //console.log(req.body);
     let custClass=customer.customerModel;

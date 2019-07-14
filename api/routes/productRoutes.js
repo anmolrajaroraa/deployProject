@@ -12,6 +12,9 @@ ProductRoutes.post('/searchquery',(req,res)=>{
     productCrud.searchsp(req,res);
 })
 
+ProductRoutes.post('/getSubProducts',(req,res)=>{
+    productCrud.getSubproduct(req.body.id,res);
+})
 
      
 module.exports=ProductRoutes;

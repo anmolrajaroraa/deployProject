@@ -68,9 +68,9 @@ for(let catchildId of category.childIds){
                         for(let childId1 of product.childIds){
                             for(let subProduct of subProducts){
                                 if(childId1==subProduct.subproductId){
-                                    subProduct.productId=childId1;
-                                    subProduct.subcategoryId=childId; 
-                                    subProduct.categoryId=catchildId;
+                                    subProduct.productId=product.productId,
+                                    subProduct.subcategoryId=subcategory.subcategoryId, 
+                                    subProduct.categoryId=category.categoryId,
                                     subProduct.categoryName=category.categoryName;
                                     subProduct.subcategoryName=subcategory.subcategoryName;
                                     subProduct.productName=product.productName;

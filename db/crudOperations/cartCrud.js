@@ -170,7 +170,7 @@ customerSchema.Customer.findByIdAndUpdate(userobj._id,{$push:{cartProducts:cartO
         });
     },
     decreaseQuantity(cartProduct,userobj,currentQuantity,res) {
-      //  console.log(cartProduct);
+        console.log(cartProduct);
         if(currentQuantity>0){
         cartModel.findOneAndUpdate({'cartProductId':cartProduct.cartProductId},{$set:{quantity:currentQuantity}},{new:true},(err,updatedObjectOfCart)=> {
             if(err) {
