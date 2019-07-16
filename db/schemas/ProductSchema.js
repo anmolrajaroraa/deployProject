@@ -27,6 +27,7 @@ const subProductSchema=new mongoose.Schema({
     info:{
         isExpress:{type:Boolean,default:false},
         brand:String,
+        storageAndUses:String,
         description:String,
         benefitsAndUses:String,
         priceAndAmount:[

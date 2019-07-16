@@ -866,6 +866,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -884,8 +886,11 @@ var getAds = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = _globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["throwError"])(err);
     };
@@ -1271,7 +1276,8 @@ var comments = {
     null: 'No Value Found In DataBase',
     delete: 'Successfully Deleted',
     add: 'Successfully Added',
-    emptycart: 'Cart is empty!'
+    emptycart: 'Cart is empty!',
+    networkError: 'Network Error'
 };
 
 
@@ -1425,6 +1431,7 @@ var subproductInfo = /** @class */ (function () {
         this.brand = null;
         this.description = null;
         this.benefitsAndUses = null;
+        this.storageAndUses = null;
         this.priceAndAmount = [];
         this.priceAndAmount.push(new _priceAndAmount__WEBPACK_IMPORTED_MODULE_0__["priceAndAmount"]());
     }
@@ -1497,6 +1504,7 @@ var base = {
     'url': 'ec2-13-127-223-100.ap-south-1.compute.amazonaws.com'
 };
 var url = {
+    getSubproduct: "http://" + base.url + "/products/getSubProducts",
     setlocationAddressExcelFile: "http://" + base.url + "/admin/bulkAddUpload",
     getlocationAddress: "http://" + base.url + "/address/getAllAdresses",
     pushlocationAddress: "http://" + base.url + "/admin/singleAddCrud",
@@ -2055,6 +2063,9 @@ var BasketComponent = /** @class */ (function () {
             this.cart.push(cartobj);
         }
         this.totalpriceemit.emit({ 'price': this.totalprice, 'discount': this.totaldiscount, 'cartIdArray': this.cartIdArray });
+    };
+    BasketComponent.prototype.ngOnDestroy = function () {
+        // this.productdto.returncart().unsubscribe();
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
@@ -2721,7 +2732,12 @@ var CheckoutpageComponent = /** @class */ (function () {
                 _this.router.navigate(['/customer/orderStatus', data.order.orderId]);
             }
         }, function (err) {
-            _this.openSnackBar(err.message, '');
+            if (err.message != null) {
+                _this.openSnackBar(err.message, '');
+            }
+            else {
+                _this.openSnackBar(err, '');
+            }
         });
     };
     CheckoutpageComponent.prototype.placeOrder = function () {
@@ -2785,7 +2801,12 @@ var CheckoutpageComponent = /** @class */ (function () {
                 _this.openSnackBar('Error Ocurred', '');
             }
         }, function (err) {
-            _this.openSnackBar(err.message, '');
+            if (err.message != null) {
+                _this.openSnackBar(err.message, '');
+            }
+            else {
+                _this.openSnackBar(err, '');
+            }
         });
     };
     CheckoutpageComponent.prototype.proceedPay = function () {
@@ -2837,7 +2858,8 @@ var CheckoutpageComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./checkoutpage.component.css */ "./src/app/modules/customerModule/checkoutSytem/checkoutpage/checkoutpage.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_moduleServices_addService__WEBPACK_IMPORTED_MODULE_2__["FillDataService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], _moduleServices_orderService__WEBPACK_IMPORTED_MODULE_3__["OrderService"], _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatSnackBar"], _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_7__["productCardDTO"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], _moduleServices_orderService__WEBPACK_IMPORTED_MODULE_3__["OrderService"], _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatSnackBar"],
+            _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_7__["productCardDTO"]])
     ], CheckoutpageComponent);
     return CheckoutpageComponent;
 }());
@@ -2997,6 +3019,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -3015,8 +3039,11 @@ var OtpService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -3617,14 +3644,14 @@ var OrderSumComponent = /** @class */ (function () {
     OrderSumComponent.prototype.getApplicableVoucher = function () {
         if (this.basketValue > 100) {
             this.applicableVouchers = this.allvouchers;
-            console.log(this.applicableVouchers);
+            //console.log(this.applicableVouchers);
         }
     };
     OrderSumComponent.prototype.getAllVouchers = function () {
         var _this = this;
         this.orderSum.getAllVouchers().subscribe(function (data) {
             if (data.status == 'S') {
-                console.log(data);
+                //console.log(data);
                 if (data.vouchers.length != 0) {
                     _this.allvouchers = data.vouchers[0].allVouchers;
                     _this.getApplicableVoucher();
@@ -3638,14 +3665,14 @@ var OrderSumComponent = /** @class */ (function () {
                 _this.openSnackBar(err.message, '');
             }
             else {
-                _this.openSnackBar('Unknown Error', '');
+                _this.openSnackBar(err, '');
             }
         });
     };
     OrderSumComponent.prototype.getBackendOrderSum = function () {
         var _this = this;
         this.orderSum.getOrderSum({ voucherCode: this.voucherCode }).subscribe(function (data) {
-            console.log(data);
+            //console.log(data);
             if (data.status == 'S') {
                 if (data.voucherDiscount != null) {
                     _this.voucherDiscount = data.voucherDiscount;
@@ -3671,7 +3698,7 @@ var OrderSumComponent = /** @class */ (function () {
                             var idArray = data.ineligibleCartArray.map(function (element) {
                                 return element.cartProductId;
                             });
-                            console.log(idArray);
+                            //console.log(idArray);
                             _this.cartCrud.emptyBasket({ 'cartIdArray': idArray }).subscribe(function (data) {
                                 if (data.status == 'EMP') {
                                     if (data.isEmpty == true) {
@@ -3688,7 +3715,7 @@ var OrderSumComponent = /** @class */ (function () {
                 _this.openSnackBar(err.message, '');
             }
             else {
-                _this.openSnackBar('Unknown Error', '');
+                _this.openSnackBar(err, '');
             }
         });
     };
@@ -3705,7 +3732,7 @@ var OrderSumComponent = /** @class */ (function () {
         });
         dialogRef.afterClosed().subscribe(function (res) {
             if (res != null) {
-                console.log(res);
+                //console.log(res);
                 _this.voucherCode = res.voucherCode;
                 _this.getBackendOrderSum();
             }
@@ -3754,6 +3781,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -3772,8 +3801,11 @@ var OrderSumService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -4353,6 +4385,9 @@ var HeaderComponent = /** @class */ (function () {
     HeaderComponent.prototype.checkScroll = function () {
         this.isSticky = window.pageYOffset >= 127; //sticky navbar
     };
+    HeaderComponent.prototype.ngOnDestroy = function () {
+        this.cartDTO.returncartdto().unsubscribe();
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"])('window:scroll', ['$event']),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Function),
@@ -4365,7 +4400,8 @@ var HeaderComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/modules/customerModule/custHeaderSystem/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.css */ "./src/app/modules/customerModule/custHeaderSystem/header.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialog"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], _moduleServices_customerData__WEBPACK_IMPORTED_MODULE_4__["CustomerDataService"], _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_5__["productCardDTO"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialog"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"],
+            _moduleServices_customerData__WEBPACK_IMPORTED_MODULE_4__["CustomerDataService"], _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_5__["productCardDTO"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -4392,7 +4428,7 @@ module.exports = ".right{\r\n    float: right;\r\n}\r\n.left{\r\n    float: left
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id='navbar'>\r\n  <div class=\"clearfix\">\r\n    <ul class=\"left inlineTable\" id=\"navbar_Table\">\r\n      <li id=\"dropdown\">\r\n        <a class=\"navbar_padding shopcategory\">\r\n        <span>SHOP BY CATEGORY</span>\r\n        <span>\r\n          <i class=\"svg-header svg-arrow-down svg-arrow-down-dim\" aria-hidden=\"true\"></i> \r\n        </span>\r\n        </a>  \r\n        <div id=\"dropdown_content\">\r\n          <div class=\"flex_container\">\r\n          <div id=\"ddc_1\">\r\n            <ul>\r\n              <li (mouseover)=\"changeCategory(category)\" *ngFor=\"let category of categorylist\">\r\n                <a href=\"\">{{category.categoryName}}</a></li>\r\n                <li style=\"border: none\">\r\n                  <a href=\"\">View All</a>\r\n                </li>\r\n            </ul>\r\n          </div>\r\n          <div id=\"ddc_2\">\r\n            <ul>\r\n              <li (mouseover)=\"changeSubcategory(subCategory)\" *ngFor=\"let subCategory of subcategory\">\r\n                <a>{{subCategory.subcategoryName}}</a>\r\n              </li>\r\n            </ul>\r\n          </div>\r\n          <div id=\"ddc_3\">\r\n            <ul>\r\n              <li *ngFor=\"let product of products\">\r\n                <a>{{product.productName}}</a>\r\n              </li>\r\n            </ul>\r\n          </div>\r\n          <div id=\"ddc_4\">\r\n            <ul>\r\n              <li></li>\r\n            </ul>\r\n          </div>\r\n        </div>\r\n        </div> \r\n\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" routerLink=\"/basket\">\r\n            <span>\r\n              <i class=\"svg-header svg-offer-icon svg-offer-icon-dim\"></i>\r\n            </span>\r\n            <span>OFFERS</span>\r\n        </a>\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" routerLink=\"/basket\">\r\n            <span>\r\n              <i class=\"svg-header svg-express-red svg-express-red-dim\"></i>\r\n            </span>\r\n            <span>BB EXPRESS</span>\r\n        </a>\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" routerLink=\"/speciality\">\r\n        <span>\r\n            <i class=\"svg-header svg-bb-speciality svg-bb-speciality-dim\"></i>\r\n        </span>\r\n        <span>BB SPECIALITY</span>\r\n        </a>\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" [routerLink]=\"\">\r\n        <span>\r\n          <i class=\"svg-header svg-more-store svg-more-store-dim\"></i>\r\n        </span>\r\n        <span>MORE STORES</span>\r\n        <span style=\"color: #555!important\">\r\n          <i style=\"margin-left: 8px;\" class=\"svg-header svg-arrow-down-2 svg-arrow-down-dim\" aria-hidden=\"true\"></i> \r\n        </span>\r\n        </a>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n</div>\r\n  "
+module.exports = "<div id='navbar'>\r\n  <div class=\"clearfix\">\r\n    <ul class=\"left inlineTable\" id=\"navbar_Table\">\r\n      <li id=\"dropdown\">\r\n        <a class=\"navbar_padding shopcategory\">\r\n        <span>SHOP BY CATEGORY</span>\r\n        <span>\r\n          <i class=\"svg-header svg-arrow-down svg-arrow-down-dim\" aria-hidden=\"true\"></i> \r\n        </span>\r\n        </a>  \r\n        <div id=\"dropdown_content\">\r\n          <div class=\"flex_container\">\r\n          <div id=\"ddc_1\">\r\n            <ul>\r\n              <li (mouseover)=\"changeCategory(category)\" *ngFor=\"let category of categorylist\">\r\n                <a href=\"\">{{category.categoryName}}</a></li>\r\n                <li style=\"border: none\">\r\n                  <a [routerLink]=\"['product/viewAll']\">View All</a>\r\n                </li>\r\n            </ul>\r\n          </div>\r\n          <div id=\"ddc_2\">\r\n            <ul>\r\n              <li (mouseover)=\"changeSubcategory(subCategory)\" *ngFor=\"let subCategory of subcategory\">\r\n                <a>{{subCategory.subcategoryName}}</a>\r\n              </li>\r\n            </ul>\r\n          </div>\r\n          <div id=\"ddc_3\">\r\n            <ul>\r\n              <li *ngFor=\"let product of products\">\r\n                <a>{{product.productName}}</a>\r\n              </li>\r\n            </ul>\r\n          </div>\r\n          <div id=\"ddc_4\">\r\n            <ul>\r\n              <li></li>\r\n            </ul>\r\n          </div>\r\n        </div>\r\n        </div> \r\n\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" routerLink=\"/basket\">\r\n            <span>\r\n              <i class=\"svg-header svg-offer-icon svg-offer-icon-dim\"></i>\r\n            </span>\r\n            <span>OFFERS</span>\r\n        </a>\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" routerLink=\"/basket\">\r\n            <span>\r\n              <i class=\"svg-header svg-express-red svg-express-red-dim\"></i>\r\n            </span>\r\n            <span>BB EXPRESS</span>\r\n        </a>\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" routerLink=\"/speciality\">\r\n        <span>\r\n            <i class=\"svg-header svg-bb-speciality svg-bb-speciality-dim\"></i>\r\n        </span>\r\n        <span>BB SPECIALITY</span>\r\n        </a>\r\n      </li>\r\n      <li class='hvr-fade'>\r\n        <a class=\"navbar_padding\" [routerLink]=\"\">\r\n        <span>\r\n          <i class=\"svg-header svg-more-store svg-more-store-dim\"></i>\r\n        </span>\r\n        <span>MORE STORES</span>\r\n        <span style=\"color: #555!important\">\r\n          <i style=\"margin-left: 8px;\" class=\"svg-header svg-arrow-down-2 svg-arrow-down-dim\" aria-hidden=\"true\"></i> \r\n        </span>\r\n        </a>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n</div>\r\n  "
 
 /***/ }),
 
@@ -4409,12 +4445,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../globalServices/categorylistjson */ "./src/app/globalServices/categorylistjson.ts");
+/* harmony import */ var _moduleServices_categoryList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../moduleServices/categoryList */ "./src/app/modules/customerModule/moduleServices/categoryList.ts");
+
 
 
 
 var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent(categories) {
+    function NavbarComponent(categories, categoryListSubject) {
         this.categories = categories;
+        this.categoryListSubject = categoryListSubject;
         this.categorylist = [];
         this.subcategory = [];
         this.products = [];
@@ -4430,6 +4469,7 @@ var NavbarComponent = /** @class */ (function () {
         this.categories.jsonretrieve().subscribe(function (data) {
             if (data != null) {
                 _this.categorylist = data;
+                _this.categoryListSubject.setcategoryList(_this.categorylist);
                 _this.subcategory = _this.categorylist[0].subcategory;
                 _this.products = _this.subcategory[0].products;
             }
@@ -4449,7 +4489,7 @@ var NavbarComponent = /** @class */ (function () {
             providers: [_globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__["CategoryJsonretriever"]],
             styles: [__webpack_require__(/*! ./navbar.component.css */ "./src/app/modules/customerModule/custHeaderSystem/navbar/navbar.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__["CategoryJsonretriever"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__["CategoryJsonretriever"], _moduleServices_categoryList__WEBPACK_IMPORTED_MODULE_3__["categoryList"]])
     ], NavbarComponent);
     return NavbarComponent;
 }());
@@ -4545,47 +4585,61 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _custHeaderSystem_header_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./custHeaderSystem/header.component */ "./src/app/modules/customerModule/custHeaderSystem/header.component.ts");
 /* harmony import */ var _custHeaderSystem_navbar_navbar_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./custHeaderSystem/navbar/navbar.component */ "./src/app/modules/customerModule/custHeaderSystem/navbar/navbar.component.ts");
 /* harmony import */ var _Footer_footer_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Footer/footer.component */ "./src/app/modules/customerModule/Footer/footer.component.ts");
-/* harmony import */ var _productcarousel_productcarousel_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./productcarousel/productcarousel.component */ "./src/app/modules/customerModule/productcarousel/productcarousel.component.ts");
-/* harmony import */ var _cartSystem_cart_cart_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./cartSystem/cart/cart.component */ "./src/app/modules/customerModule/cartSystem/cart/cart.component.ts");
-/* harmony import */ var _product_card_product_card_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./product-card/product-card.component */ "./src/app/modules/customerModule/product-card/product-card.component.ts");
-/* harmony import */ var _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./moduleServices/productCartDto */ "./src/app/modules/customerModule/moduleServices/productCartDto.ts");
-/* harmony import */ var _productcategory_productcategory_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./productcategory/productcategory.component */ "./src/app/modules/customerModule/productcategory/productcategory.component.ts");
-/* harmony import */ var _loopcarousel_loopcarousel_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./loopcarousel/loopcarousel.component */ "./src/app/modules/customerModule/loopcarousel/loopcarousel.component.ts");
-/* harmony import */ var ngx_slick_carousel__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ngx-slick-carousel */ "./node_modules/ngx-slick-carousel/fesm5/ngx-slick-carousel.js");
-/* harmony import */ var _globalServices_sortPipe__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../globalServices/sortPipe */ "./src/app/globalServices/sortPipe.ts");
-/* harmony import */ var _globalServices_activePipe__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../globalServices/activePipe */ "./src/app/globalServices/activePipe.ts");
-/* harmony import */ var _sp_sp_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./sp/sp.component */ "./src/app/modules/customerModule/sp/sp.component.ts");
-/* harmony import */ var _customer_routing_module__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./customer.routing.module */ "./src/app/modules/customerModule/customer.routing.module.ts");
-/* harmony import */ var _moduleServices_cartDataService__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./moduleServices/cartDataService */ "./src/app/modules/customerModule/moduleServices/cartDataService.ts");
-/* harmony import */ var _cartSystem_cartItem_cartItem_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./cartSystem/cartItem/cartItem.component */ "./src/app/modules/customerModule/cartSystem/cartItem/cartItem.component.ts");
-/* harmony import */ var _loginSystem_sign_up_sign_up_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./loginSystem/sign-up/sign-up.component */ "./src/app/modules/customerModule/loginSystem/sign-up/sign-up.component.ts");
-/* harmony import */ var _loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./loginSystem/login-signup/login-signup.component */ "./src/app/modules/customerModule/loginSystem/login-signup/login-signup.component.ts");
-/* harmony import */ var _loginSystem_login_signup_services_authenticateUser__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./loginSystem/login-signup/services/authenticateUser */ "./src/app/modules/customerModule/loginSystem/login-signup/services/authenticateUser.ts");
-/* harmony import */ var _loginSystem_social_auth_social_auth_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./loginSystem/social-auth/social-auth.component */ "./src/app/modules/customerModule/loginSystem/social-auth/social-auth.component.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _moduleServices_customerData__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./moduleServices/customerData */ "./src/app/modules/customerModule/moduleServices/customerData.ts");
-/* harmony import */ var _moduleServices_CustAuthInterceptor__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./moduleServices/CustAuthInterceptor */ "./src/app/modules/customerModule/moduleServices/CustAuthInterceptor.ts");
-/* harmony import */ var _loginSystem_login_login_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./loginSystem/login/login.component */ "./src/app/modules/customerModule/loginSystem/login/login.component.ts");
-/* harmony import */ var _basketSystem_basket_basket_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./basketSystem/basket/basket.component */ "./src/app/modules/customerModule/basketSystem/basket/basket.component.ts");
-/* harmony import */ var _basketSystem_basket_item_basket_item_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./basketSystem/basket-item/basket-item.component */ "./src/app/modules/customerModule/basketSystem/basket-item/basket-item.component.ts");
-/* harmony import */ var _basketSystem_basketpage_basketpage_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./basketSystem/basketpage/basketpage.component */ "./src/app/modules/customerModule/basketSystem/basketpage/basketpage.component.ts");
-/* harmony import */ var _checkoutSytem_checkoutpage_checkoutpage_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./checkoutSytem/checkoutpage/checkoutpage.component */ "./src/app/modules/customerModule/checkoutSytem/checkoutpage/checkoutpage.component.ts");
-/* harmony import */ var _checkoutSytem_deliv_address_deliv_address_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./checkoutSytem/deliv-address/deliv-address.component */ "./src/app/modules/customerModule/checkoutSytem/deliv-address/deliv-address.component.ts");
-/* harmony import */ var _checkoutSytem_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./checkoutSytem/add-card/add-card.component */ "./src/app/modules/customerModule/checkoutSytem/add-card/add-card.component.ts");
-/* harmony import */ var _checkoutSytem_order_sum_order_sum_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./checkoutSytem/order-sum/order-sum.component */ "./src/app/modules/customerModule/checkoutSytem/order-sum/order-sum.component.ts");
-/* harmony import */ var _checkoutSytem_gift_card_gift_card_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./checkoutSytem/gift-card/gift-card.component */ "./src/app/modules/customerModule/checkoutSytem/gift-card/gift-card.component.ts");
-/* harmony import */ var _checkoutSytem_deliv_options_deliv_options_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./checkoutSytem/deliv-options/deliv-options.component */ "./src/app/modules/customerModule/checkoutSytem/deliv-options/deliv-options.component.ts");
-/* harmony import */ var _checkoutSytem_time_slot_time_slot_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./checkoutSytem/time-slot/time-slot.component */ "./src/app/modules/customerModule/checkoutSytem/time-slot/time-slot.component.ts");
-/* harmony import */ var _checkoutSytem_payment_option_payment_option_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./checkoutSytem/payment-option/payment-option.component */ "./src/app/modules/customerModule/checkoutSytem/payment-option/payment-option.component.ts");
-/* harmony import */ var _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./checkoutSytem/order-placed/order-placed.component */ "./src/app/modules/customerModule/checkoutSytem/order-placed/order-placed.component.ts");
-/* harmony import */ var _delivery_product_status_delivery_status_component__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./delivery-product-status/delivery-status.component */ "./src/app/modules/customerModule/delivery-product-status/delivery-status.component.ts");
-/* harmony import */ var _checkoutSytem_standdeliv_standdeliv_component__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./checkoutSytem/standdeliv/standdeliv.component */ "./src/app/modules/customerModule/checkoutSytem/standdeliv/standdeliv.component.ts");
-/* harmony import */ var _checkoutSytem_expressdeliv_expressdeliv_component__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./checkoutSytem/expressdeliv/expressdeliv.component */ "./src/app/modules/customerModule/checkoutSytem/expressdeliv/expressdeliv.component.ts");
-/* harmony import */ var _time_line_time_line_component__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./time-line/time-line.component */ "./src/app/modules/customerModule/time-line/time-line.component.ts");
-/* harmony import */ var _checkoutSytem_otp_dialog_otp_dialog_component__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./checkoutSytem/otp-dialog/otp-dialog.component */ "./src/app/modules/customerModule/checkoutSytem/otp-dialog/otp-dialog.component.ts");
-/* harmony import */ var _vouchers_dialog_vouchers_dialog_component__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./vouchers-dialog/vouchers-dialog.component */ "./src/app/modules/customerModule/vouchers-dialog/vouchers-dialog.component.ts");
-/* harmony import */ var _voucher_data_voucher_data_component__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./voucher-data/voucher-data.component */ "./src/app/modules/customerModule/voucher-data/voucher-data.component.ts");
-/* harmony import */ var _cartSystem_ineligible_cart_dialog_ineligible_cart_dialog_component__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./cartSystem/ineligible-cart-dialog/ineligible-cart-dialog.component */ "./src/app/modules/customerModule/cartSystem/ineligible-cart-dialog/ineligible-cart-dialog.component.ts");
+/* harmony import */ var _cartSystem_cart_cart_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./cartSystem/cart/cart.component */ "./src/app/modules/customerModule/cartSystem/cart/cart.component.ts");
+/* harmony import */ var _product_card_product_card_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./product-card/product-card.component */ "./src/app/modules/customerModule/product-card/product-card.component.ts");
+/* harmony import */ var _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./moduleServices/productCartDto */ "./src/app/modules/customerModule/moduleServices/productCartDto.ts");
+/* harmony import */ var _productcategory_productcategory_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./productcategory/productcategory.component */ "./src/app/modules/customerModule/productcategory/productcategory.component.ts");
+/* harmony import */ var _loopcarousel_loopcarousel_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./loopcarousel/loopcarousel.component */ "./src/app/modules/customerModule/loopcarousel/loopcarousel.component.ts");
+/* harmony import */ var ngx_slick_carousel__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ngx-slick-carousel */ "./node_modules/ngx-slick-carousel/fesm5/ngx-slick-carousel.js");
+/* harmony import */ var _globalServices_sortPipe__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../globalServices/sortPipe */ "./src/app/globalServices/sortPipe.ts");
+/* harmony import */ var _globalServices_activePipe__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../globalServices/activePipe */ "./src/app/globalServices/activePipe.ts");
+/* harmony import */ var _sp_sp_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./sp/sp.component */ "./src/app/modules/customerModule/sp/sp.component.ts");
+/* harmony import */ var _customer_routing_module__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./customer.routing.module */ "./src/app/modules/customerModule/customer.routing.module.ts");
+/* harmony import */ var _moduleServices_cartDataService__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./moduleServices/cartDataService */ "./src/app/modules/customerModule/moduleServices/cartDataService.ts");
+/* harmony import */ var _cartSystem_cartItem_cartItem_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./cartSystem/cartItem/cartItem.component */ "./src/app/modules/customerModule/cartSystem/cartItem/cartItem.component.ts");
+/* harmony import */ var _loginSystem_sign_up_sign_up_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./loginSystem/sign-up/sign-up.component */ "./src/app/modules/customerModule/loginSystem/sign-up/sign-up.component.ts");
+/* harmony import */ var _loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./loginSystem/login-signup/login-signup.component */ "./src/app/modules/customerModule/loginSystem/login-signup/login-signup.component.ts");
+/* harmony import */ var _loginSystem_login_signup_services_authenticateUser__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./loginSystem/login-signup/services/authenticateUser */ "./src/app/modules/customerModule/loginSystem/login-signup/services/authenticateUser.ts");
+/* harmony import */ var _loginSystem_social_auth_social_auth_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./loginSystem/social-auth/social-auth.component */ "./src/app/modules/customerModule/loginSystem/social-auth/social-auth.component.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _moduleServices_customerData__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./moduleServices/customerData */ "./src/app/modules/customerModule/moduleServices/customerData.ts");
+/* harmony import */ var _moduleServices_CustAuthInterceptor__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./moduleServices/CustAuthInterceptor */ "./src/app/modules/customerModule/moduleServices/CustAuthInterceptor.ts");
+/* harmony import */ var _loginSystem_login_login_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./loginSystem/login/login.component */ "./src/app/modules/customerModule/loginSystem/login/login.component.ts");
+/* harmony import */ var _basketSystem_basket_basket_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./basketSystem/basket/basket.component */ "./src/app/modules/customerModule/basketSystem/basket/basket.component.ts");
+/* harmony import */ var _basketSystem_basket_item_basket_item_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./basketSystem/basket-item/basket-item.component */ "./src/app/modules/customerModule/basketSystem/basket-item/basket-item.component.ts");
+/* harmony import */ var _basketSystem_basketpage_basketpage_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./basketSystem/basketpage/basketpage.component */ "./src/app/modules/customerModule/basketSystem/basketpage/basketpage.component.ts");
+/* harmony import */ var _checkoutSytem_checkoutpage_checkoutpage_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./checkoutSytem/checkoutpage/checkoutpage.component */ "./src/app/modules/customerModule/checkoutSytem/checkoutpage/checkoutpage.component.ts");
+/* harmony import */ var _checkoutSytem_deliv_address_deliv_address_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./checkoutSytem/deliv-address/deliv-address.component */ "./src/app/modules/customerModule/checkoutSytem/deliv-address/deliv-address.component.ts");
+/* harmony import */ var _checkoutSytem_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./checkoutSytem/add-card/add-card.component */ "./src/app/modules/customerModule/checkoutSytem/add-card/add-card.component.ts");
+/* harmony import */ var _checkoutSytem_order_sum_order_sum_component__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./checkoutSytem/order-sum/order-sum.component */ "./src/app/modules/customerModule/checkoutSytem/order-sum/order-sum.component.ts");
+/* harmony import */ var _checkoutSytem_gift_card_gift_card_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./checkoutSytem/gift-card/gift-card.component */ "./src/app/modules/customerModule/checkoutSytem/gift-card/gift-card.component.ts");
+/* harmony import */ var _checkoutSytem_deliv_options_deliv_options_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./checkoutSytem/deliv-options/deliv-options.component */ "./src/app/modules/customerModule/checkoutSytem/deliv-options/deliv-options.component.ts");
+/* harmony import */ var _checkoutSytem_time_slot_time_slot_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./checkoutSytem/time-slot/time-slot.component */ "./src/app/modules/customerModule/checkoutSytem/time-slot/time-slot.component.ts");
+/* harmony import */ var _checkoutSytem_payment_option_payment_option_component__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./checkoutSytem/payment-option/payment-option.component */ "./src/app/modules/customerModule/checkoutSytem/payment-option/payment-option.component.ts");
+/* harmony import */ var _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./checkoutSytem/order-placed/order-placed.component */ "./src/app/modules/customerModule/checkoutSytem/order-placed/order-placed.component.ts");
+/* harmony import */ var _delivery_product_status_delivery_status_component__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./delivery-product-status/delivery-status.component */ "./src/app/modules/customerModule/delivery-product-status/delivery-status.component.ts");
+/* harmony import */ var _checkoutSytem_standdeliv_standdeliv_component__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./checkoutSytem/standdeliv/standdeliv.component */ "./src/app/modules/customerModule/checkoutSytem/standdeliv/standdeliv.component.ts");
+/* harmony import */ var _checkoutSytem_expressdeliv_expressdeliv_component__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./checkoutSytem/expressdeliv/expressdeliv.component */ "./src/app/modules/customerModule/checkoutSytem/expressdeliv/expressdeliv.component.ts");
+/* harmony import */ var _time_line_time_line_component__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./time-line/time-line.component */ "./src/app/modules/customerModule/time-line/time-line.component.ts");
+/* harmony import */ var _checkoutSytem_otp_dialog_otp_dialog_component__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./checkoutSytem/otp-dialog/otp-dialog.component */ "./src/app/modules/customerModule/checkoutSytem/otp-dialog/otp-dialog.component.ts");
+/* harmony import */ var _vouchers_dialog_vouchers_dialog_component__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./vouchers-dialog/vouchers-dialog.component */ "./src/app/modules/customerModule/vouchers-dialog/vouchers-dialog.component.ts");
+/* harmony import */ var _voucher_data_voucher_data_component__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./voucher-data/voucher-data.component */ "./src/app/modules/customerModule/voucher-data/voucher-data.component.ts");
+/* harmony import */ var _cartSystem_ineligible_cart_dialog_ineligible_cart_dialog_component__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./cartSystem/ineligible-cart-dialog/ineligible-cart-dialog.component */ "./src/app/modules/customerModule/cartSystem/ineligible-cart-dialog/ineligible-cart-dialog.component.ts");
+/* harmony import */ var _pdpage_pdpage_component__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./pdpage/pdpage.component */ "./src/app/modules/customerModule/pdpage/pdpage.component.ts");
+/* harmony import */ var _product_product_component__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./product/product.component */ "./src/app/modules/customerModule/product/product.component.ts");
+/* harmony import */ var _product_image_product_image_component__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./product-image/product-image.component */ "./src/app/modules/customerModule/product-image/product-image.component.ts");
+/* harmony import */ var _subproductdata_subproductdata_component__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./subproductdata/subproductdata.component */ "./src/app/modules/customerModule/subproductdata/subproductdata.component.ts");
+/* harmony import */ var _subproduct_amt_price_subproduct_amt_price_component__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./subproduct-amt-price/subproduct-amt-price.component */ "./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.ts");
+/* harmony import */ var _moduleServices_categoryList__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./moduleServices/categoryList */ "./src/app/modules/customerModule/moduleServices/categoryList.ts");
+/* harmony import */ var _view_all_view_all_component__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./view-all/view-all.component */ "./src/app/modules/customerModule/view-all/view-all.component.ts");
+/* harmony import */ var _view_all_indview_indview_component__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./view-all/indview/indview.component */ "./src/app/modules/customerModule/view-all/indview/indview.component.ts");
+
+
+
+
+
+
+
 
 
 
@@ -4648,45 +4702,51 @@ var CustomerModule = /** @class */ (function () {
             declarations: [
                 _custHeaderSystem_header_component__WEBPACK_IMPORTED_MODULE_10__["HeaderComponent"],
                 _Footer_footer_component__WEBPACK_IMPORTED_MODULE_12__["FooterComponent"],
-                _product_card_product_card_component__WEBPACK_IMPORTED_MODULE_15__["ProductCardComponent"],
+                _product_card_product_card_component__WEBPACK_IMPORTED_MODULE_14__["ProductCardComponent"],
                 _customer_component__WEBPACK_IMPORTED_MODULE_6__["CustomerComponent"],
-                _globalServices_sortPipe__WEBPACK_IMPORTED_MODULE_20__["sorByPipe"], _globalServices_activePipe__WEBPACK_IMPORTED_MODULE_21__["activePipe"],
+                _globalServices_sortPipe__WEBPACK_IMPORTED_MODULE_19__["sorByPipe"], _globalServices_activePipe__WEBPACK_IMPORTED_MODULE_20__["activePipe"],
                 _homepage_1_cust_homepage_component__WEBPACK_IMPORTED_MODULE_5__["CustomerHomepageComponent"],
                 _custHeaderSystem_navbar_navbar_component__WEBPACK_IMPORTED_MODULE_11__["NavbarComponent"],
-                _cartSystem_cartItem_cartItem_component__WEBPACK_IMPORTED_MODULE_25__["CartItemComponent"],
-                _productcarousel_productcarousel_component__WEBPACK_IMPORTED_MODULE_13__["ProductcarouselComponent"],
-                _cartSystem_cart_cart_component__WEBPACK_IMPORTED_MODULE_14__["CartComponent"],
-                _productcategory_productcategory_component__WEBPACK_IMPORTED_MODULE_17__["ProductcategoryComponent"],
-                _loopcarousel_loopcarousel_component__WEBPACK_IMPORTED_MODULE_18__["LoopcarouselComponent"],
-                _sp_sp_component__WEBPACK_IMPORTED_MODULE_22__["SpComponent"],
-                _loginSystem_sign_up_sign_up_component__WEBPACK_IMPORTED_MODULE_26__["SignUpComponent"],
-                _loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_27__["LoginSignupComponent"],
-                _loginSystem_social_auth_social_auth_component__WEBPACK_IMPORTED_MODULE_29__["SocialAuthComponent"],
-                _loginSystem_login_login_component__WEBPACK_IMPORTED_MODULE_33__["CustomerLoginComponent"],
-                _basketSystem_basket_basket_component__WEBPACK_IMPORTED_MODULE_34__["BasketComponent"],
-                _basketSystem_basket_item_basket_item_component__WEBPACK_IMPORTED_MODULE_35__["BasketItemComponent"],
-                _basketSystem_basketpage_basketpage_component__WEBPACK_IMPORTED_MODULE_36__["BasketpageComponent"],
-                _checkoutSytem_checkoutpage_checkoutpage_component__WEBPACK_IMPORTED_MODULE_37__["CheckoutpageComponent"],
-                _checkoutSytem_deliv_address_deliv_address_component__WEBPACK_IMPORTED_MODULE_38__["DelivAddressComponent"],
-                _checkoutSytem_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_39__["AddCardComponent"],
-                _checkoutSytem_order_sum_order_sum_component__WEBPACK_IMPORTED_MODULE_40__["OrderSumComponent"],
-                _checkoutSytem_gift_card_gift_card_component__WEBPACK_IMPORTED_MODULE_41__["GiftCardComponent"],
-                _checkoutSytem_deliv_options_deliv_options_component__WEBPACK_IMPORTED_MODULE_42__["DelivOptionsComponent"],
-                _checkoutSytem_time_slot_time_slot_component__WEBPACK_IMPORTED_MODULE_43__["TimeSlotComponent"],
-                _checkoutSytem_payment_option_payment_option_component__WEBPACK_IMPORTED_MODULE_44__["PaymentOptionComponent"],
-                _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_45__["OrderPlacedComponent"],
-                _delivery_product_status_delivery_status_component__WEBPACK_IMPORTED_MODULE_46__["DeliveryStatusComponent"],
-                _checkoutSytem_standdeliv_standdeliv_component__WEBPACK_IMPORTED_MODULE_47__["StanddelivComponent"],
-                _checkoutSytem_expressdeliv_expressdeliv_component__WEBPACK_IMPORTED_MODULE_48__["ExpressdelivComponent"],
-                _time_line_time_line_component__WEBPACK_IMPORTED_MODULE_49__["TimeLineComponent"],
-                _checkoutSytem_otp_dialog_otp_dialog_component__WEBPACK_IMPORTED_MODULE_50__["OtpDialogComponent"],
-                _vouchers_dialog_vouchers_dialog_component__WEBPACK_IMPORTED_MODULE_51__["VouchersDialogComponent"],
-                _voucher_data_voucher_data_component__WEBPACK_IMPORTED_MODULE_52__["VoucherDataComponent"],
-                _cartSystem_ineligible_cart_dialog_ineligible_cart_dialog_component__WEBPACK_IMPORTED_MODULE_53__["IneligibleCartDialogComponent"]
+                _cartSystem_cartItem_cartItem_component__WEBPACK_IMPORTED_MODULE_24__["CartItemComponent"],
+                _cartSystem_cart_cart_component__WEBPACK_IMPORTED_MODULE_13__["CartComponent"],
+                _productcategory_productcategory_component__WEBPACK_IMPORTED_MODULE_16__["ProductcategoryComponent"],
+                _loopcarousel_loopcarousel_component__WEBPACK_IMPORTED_MODULE_17__["LoopcarouselComponent"],
+                _sp_sp_component__WEBPACK_IMPORTED_MODULE_21__["SpComponent"],
+                _loginSystem_sign_up_sign_up_component__WEBPACK_IMPORTED_MODULE_25__["SignUpComponent"],
+                _loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_26__["LoginSignupComponent"],
+                _loginSystem_social_auth_social_auth_component__WEBPACK_IMPORTED_MODULE_28__["SocialAuthComponent"],
+                _loginSystem_login_login_component__WEBPACK_IMPORTED_MODULE_32__["CustomerLoginComponent"],
+                _basketSystem_basket_basket_component__WEBPACK_IMPORTED_MODULE_33__["BasketComponent"],
+                _basketSystem_basket_item_basket_item_component__WEBPACK_IMPORTED_MODULE_34__["BasketItemComponent"],
+                _basketSystem_basketpage_basketpage_component__WEBPACK_IMPORTED_MODULE_35__["BasketpageComponent"],
+                _checkoutSytem_checkoutpage_checkoutpage_component__WEBPACK_IMPORTED_MODULE_36__["CheckoutpageComponent"],
+                _checkoutSytem_deliv_address_deliv_address_component__WEBPACK_IMPORTED_MODULE_37__["DelivAddressComponent"],
+                _checkoutSytem_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_38__["AddCardComponent"],
+                _checkoutSytem_order_sum_order_sum_component__WEBPACK_IMPORTED_MODULE_39__["OrderSumComponent"],
+                _checkoutSytem_gift_card_gift_card_component__WEBPACK_IMPORTED_MODULE_40__["GiftCardComponent"],
+                _checkoutSytem_deliv_options_deliv_options_component__WEBPACK_IMPORTED_MODULE_41__["DelivOptionsComponent"],
+                _checkoutSytem_time_slot_time_slot_component__WEBPACK_IMPORTED_MODULE_42__["TimeSlotComponent"],
+                _checkoutSytem_payment_option_payment_option_component__WEBPACK_IMPORTED_MODULE_43__["PaymentOptionComponent"],
+                _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_44__["OrderPlacedComponent"],
+                _delivery_product_status_delivery_status_component__WEBPACK_IMPORTED_MODULE_45__["DeliveryStatusComponent"],
+                _checkoutSytem_standdeliv_standdeliv_component__WEBPACK_IMPORTED_MODULE_46__["StanddelivComponent"],
+                _checkoutSytem_expressdeliv_expressdeliv_component__WEBPACK_IMPORTED_MODULE_47__["ExpressdelivComponent"],
+                _time_line_time_line_component__WEBPACK_IMPORTED_MODULE_48__["TimeLineComponent"],
+                _checkoutSytem_otp_dialog_otp_dialog_component__WEBPACK_IMPORTED_MODULE_49__["OtpDialogComponent"],
+                _vouchers_dialog_vouchers_dialog_component__WEBPACK_IMPORTED_MODULE_50__["VouchersDialogComponent"],
+                _voucher_data_voucher_data_component__WEBPACK_IMPORTED_MODULE_51__["VoucherDataComponent"],
+                _cartSystem_ineligible_cart_dialog_ineligible_cart_dialog_component__WEBPACK_IMPORTED_MODULE_52__["IneligibleCartDialogComponent"],
+                _pdpage_pdpage_component__WEBPACK_IMPORTED_MODULE_53__["PdpageComponent"],
+                _product_product_component__WEBPACK_IMPORTED_MODULE_54__["ProductComponent"],
+                _product_image_product_image_component__WEBPACK_IMPORTED_MODULE_55__["ProductImageComponent"],
+                _subproductdata_subproductdata_component__WEBPACK_IMPORTED_MODULE_56__["SubproductdataComponent"],
+                _subproduct_amt_price_subproduct_amt_price_component__WEBPACK_IMPORTED_MODULE_57__["SubproductAmtPriceComponent"],
+                _view_all_view_all_component__WEBPACK_IMPORTED_MODULE_59__["ViewAllComponent"],
+                _view_all_indview_indview_component__WEBPACK_IMPORTED_MODULE_60__["IndviewComponent"]
             ],
             imports: [_angular_router__WEBPACK_IMPORTED_MODULE_7__["RouterModule"],
-                _customer_routing_module__WEBPACK_IMPORTED_MODULE_23__["CustomerRoutingModule"],
-                ngx_slick_carousel__WEBPACK_IMPORTED_MODULE_19__["SlickCarouselModule"],
+                _customer_routing_module__WEBPACK_IMPORTED_MODULE_22__["CustomerRoutingModule"],
+                ngx_slick_carousel__WEBPACK_IMPORTED_MODULE_18__["SlickCarouselModule"],
                 _sharedModule_sharedModule__WEBPACK_IMPORTED_MODULE_3__["SharedModule"],
                 _angular_material_dialog__WEBPACK_IMPORTED_MODULE_9__["MatDialogModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"],
@@ -4694,15 +4754,14 @@ var CustomerModule = /** @class */ (function () {
                 src_app_importMats_module__WEBPACK_IMPORTED_MODULE_4__["MyOwnCustomMaterialModule"],
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"]
             ],
-            providers: [_moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_16__["productCardDTO"], _moduleServices_cartDataService__WEBPACK_IMPORTED_MODULE_24__["cartDataService"], _loginSystem_login_signup_services_authenticateUser__WEBPACK_IMPORTED_MODULE_28__["AuthenticationService"], _moduleServices_customerData__WEBPACK_IMPORTED_MODULE_31__["CustomerDataService"],
-                ,
+            providers: [_moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_15__["productCardDTO"], _moduleServices_cartDataService__WEBPACK_IMPORTED_MODULE_23__["cartDataService"], _loginSystem_login_signup_services_authenticateUser__WEBPACK_IMPORTED_MODULE_27__["AuthenticationService"], _moduleServices_customerData__WEBPACK_IMPORTED_MODULE_30__["CustomerDataService"], _moduleServices_categoryList__WEBPACK_IMPORTED_MODULE_58__["categoryList"],
                 {
-                    provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_30__["HTTP_INTERCEPTORS"],
-                    useClass: _moduleServices_CustAuthInterceptor__WEBPACK_IMPORTED_MODULE_32__["CustAuthInterceptor"],
+                    provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_29__["HTTP_INTERCEPTORS"],
+                    useClass: _moduleServices_CustAuthInterceptor__WEBPACK_IMPORTED_MODULE_31__["CustAuthInterceptor"],
                     multi: true
                 }],
             exports: [],
-            entryComponents: [_loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_27__["LoginSignupComponent"], _checkoutSytem_time_slot_time_slot_component__WEBPACK_IMPORTED_MODULE_43__["TimeSlotComponent"], _checkoutSytem_otp_dialog_otp_dialog_component__WEBPACK_IMPORTED_MODULE_50__["OtpDialogComponent"], _vouchers_dialog_vouchers_dialog_component__WEBPACK_IMPORTED_MODULE_51__["VouchersDialogComponent"], _cartSystem_ineligible_cart_dialog_ineligible_cart_dialog_component__WEBPACK_IMPORTED_MODULE_53__["IneligibleCartDialogComponent"]]
+            entryComponents: [_loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_26__["LoginSignupComponent"], _checkoutSytem_time_slot_time_slot_component__WEBPACK_IMPORTED_MODULE_42__["TimeSlotComponent"], _checkoutSytem_otp_dialog_otp_dialog_component__WEBPACK_IMPORTED_MODULE_49__["OtpDialogComponent"], _vouchers_dialog_vouchers_dialog_component__WEBPACK_IMPORTED_MODULE_50__["VouchersDialogComponent"], _cartSystem_ineligible_cart_dialog_ineligible_cart_dialog_component__WEBPACK_IMPORTED_MODULE_52__["IneligibleCartDialogComponent"]]
         })
     ], CustomerModule);
     return CustomerModule;
@@ -4732,6 +4791,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _basketSystem_basketpage_basketpage_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./basketSystem/basketpage/basketpage.component */ "./src/app/modules/customerModule/basketSystem/basketpage/basketpage.component.ts");
 /* harmony import */ var _checkoutSytem_checkoutpage_checkoutpage_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./checkoutSytem/checkoutpage/checkoutpage.component */ "./src/app/modules/customerModule/checkoutSytem/checkoutpage/checkoutpage.component.ts");
 /* harmony import */ var _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./checkoutSytem/order-placed/order-placed.component */ "./src/app/modules/customerModule/checkoutSytem/order-placed/order-placed.component.ts");
+/* harmony import */ var _pdpage_pdpage_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pdpage/pdpage.component */ "./src/app/modules/customerModule/pdpage/pdpage.component.ts");
+/* harmony import */ var _view_all_view_all_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./view-all/view-all.component */ "./src/app/modules/customerModule/view-all/view-all.component.ts");
+
+
 
 
 
@@ -4749,7 +4812,9 @@ var routes = [
             { path: 'sp', component: _sp_sp_component__WEBPACK_IMPORTED_MODULE_6__["SpComponent"] },
             { path: 'basket', component: _basketSystem_basketpage_basketpage_component__WEBPACK_IMPORTED_MODULE_7__["BasketpageComponent"] },
             { path: 'checkout', component: _checkoutSytem_checkoutpage_checkoutpage_component__WEBPACK_IMPORTED_MODULE_8__["CheckoutpageComponent"] },
-            { path: 'orderStatus/:id', component: _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_9__["OrderPlacedComponent"] }
+            { path: 'orderStatus/:id', component: _checkoutSytem_order_placed_order_placed_component__WEBPACK_IMPORTED_MODULE_9__["OrderPlacedComponent"] },
+            { path: 'pd/:id', component: _pdpage_pdpage_component__WEBPACK_IMPORTED_MODULE_10__["PdpageComponent"] },
+            { path: 'product/viewAll', component: _view_all_view_all_component__WEBPACK_IMPORTED_MODULE_11__["ViewAllComponent"] }
         ] }
 ];
 var CustomerRoutingModule = /** @class */ (function () {
@@ -4845,7 +4910,7 @@ var DeliveryStatusComponent = /** @class */ (function () {
                     _this.openSnackBar(err.message, '');
                 }
                 else {
-                    _this.openSnackBar('Error Occur', '');
+                    _this.openSnackBar(err, '');
                 }
             });
         }
@@ -4863,7 +4928,7 @@ var DeliveryStatusComponent = /** @class */ (function () {
                     _this.openSnackBar(err.message, '');
                 }
                 else {
-                    _this.openSnackBar('Error Occur', '');
+                    _this.openSnackBar(err, '');
                 }
             });
         }
@@ -4885,7 +4950,7 @@ var DeliveryStatusComponent = /** @class */ (function () {
                     _this.openSnackBar(err.message, '');
                 }
                 else {
-                    _this.openSnackBar('Error Occur', '');
+                    _this.openSnackBar(err, '');
                 }
             });
         });
@@ -4924,6 +4989,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -4941,8 +5008,11 @@ var DelLevelService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -5154,6 +5224,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -5173,8 +5245,11 @@ var AuthenticationService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -5573,6 +5648,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -5592,8 +5669,11 @@ var FillDataService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -5634,6 +5714,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -5650,8 +5732,11 @@ var cartDataService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_6__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["throwError"])(err);
     };
@@ -5664,6 +5749,42 @@ var cartDataService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
     ], cartDataService);
     return cartDataService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/moduleServices/categoryList.ts":
+/*!***********************************************************************!*\
+  !*** ./src/app/modules/customerModule/moduleServices/categoryList.ts ***!
+  \***********************************************************************/
+/*! exports provided: categoryList */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "categoryList", function() { return categoryList; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+var categoryList = /** @class */ (function () {
+    function categoryList() {
+        this.categorylist = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+    }
+    categoryList.prototype.getBehaviourSubject = function () {
+        return this.categorylist;
+    };
+    categoryList.prototype.setcategoryList = function (categorylist) {
+        this.categorylist.next(categorylist);
+    };
+    categoryList = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()
+    ], categoryList);
+    return categoryList;
 }());
 
 
@@ -5686,6 +5807,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -5703,8 +5826,11 @@ var CustomerDataService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_6__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["throwError"])(err);
     };
@@ -5746,6 +5872,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -5764,8 +5892,11 @@ var OrderService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -5831,6 +5962,206 @@ var productCardDTO = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/customerModule/pdpage/pdpage.component.css":
+/*!********************************************************************!*\
+  !*** ./src/app/modules/customerModule/pdpage/pdpage.component.css ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".flexcontainer{\n    display:flex;\n    justify-content: space-around;\n    text-align: left;\n}\n\na{\n    color:none;\n    text-decoration: none;\n}\n\n.tagcss{\n    cursor: pointer;\n    color: #676768;\n    line-height: 140%;\n\n}\n\n#heading{\n    border-bottom: 1px solid lightgray;\n}\n\n#info{\n    margin:0% 10%;\n    text-align:left;\n    padding:10px;\n}\n\n#sidenav{\n    width: 20%;\n    margin: 2% 0% 2% 10%;\n    padding: 0% 2% 0% 0%;\n    border-right: 1px solid lightgray;\n}\n\n#content{\n    width: 90%;\n    margin: 2% 9% 2% 0%;\n}\n\n.tagcss:hover{color:#096}\n\n#cat{\n    border-bottom: 2px solid #84c225;\n    color: rgba(34,34,34,.87);\n    display: inline-block;\n    padding-bottom: 2px;\n    font-size: 1rem;\n   \n}\n\n#datacontainer{\n    margin:2% 0%;\n}\n\n#catname{\n    margin-left:5px;\n   \n}\n\n#subcatname{\n    font-size: 0.9rem;\nmargin-left:15px;\n}\n\n.infohead{\n    font-size:1rem;\n}\n\n.infodata{\n    font-size:0.8rem;\n    color:#444;\n    margin-bottom:5px !important;\n}\n\n#producthead{\n    font-size:1.6rem;\n    padding:10px 0px;\n    border-bottom:1px solid lightgray;\n}\n\n.productname{\n    margin-left: 25px;\n    color: #676768;\n    font-size:0.8rem;\n}\n\n#about{\n    padding:10px 0px;\n    border-bottom:1px solid lightgray;\n\n}\n\n#benefitsAndUses{\n    padding:10px 0px;\n    border-bottom:1px solid lightgray;\n}\n\n#storage{\n    padding:10px 0px;\n    border-bottom:1px solid lightgray;\n}\n\n@media screen and (max-width:888px){\n    #sidenav{\n    width: 35%;\n    margin: 2% 0% 2% 5%;\n    }\n}\n\n@media screen and (max-width:500px){\n    #sidenav{\n        display: none;\n    }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9jdXN0b21lck1vZHVsZS9wZHBhZ2UvcGRwYWdlLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxhQUFhO0lBQ2IsOEJBQThCO0lBQzlCLGlCQUFpQjtDQUNwQjs7QUFFRDtJQUNJLFdBQVc7SUFDWCxzQkFBc0I7Q0FDekI7O0FBQ0Q7SUFDSSxnQkFBZ0I7SUFDaEIsZUFBZTtJQUNmLGtCQUFrQjs7Q0FFckI7O0FBRUQ7SUFDSSxtQ0FBbUM7Q0FDdEM7O0FBQ0Q7SUFDSSxjQUFjO0lBQ2QsZ0JBQWdCO0lBQ2hCLGFBQWE7Q0FDaEI7O0FBQ0Q7SUFDSSxXQUFXO0lBQ1gscUJBQXFCO0lBQ3JCLHFCQUFxQjtJQUNyQixrQ0FBa0M7Q0FDckM7O0FBRUQ7SUFDSSxXQUFXO0lBQ1gsb0JBQW9CO0NBQ3ZCOztBQUVELGNBQWMsVUFBVSxDQUFDOztBQUV6QjtJQUNJLGlDQUFpQztJQUNqQywwQkFBMEI7SUFDMUIsc0JBQXNCO0lBQ3RCLG9CQUFvQjtJQUNwQixnQkFBZ0I7O0NBRW5COztBQUVEO0lBQ0ksYUFBYTtDQUNoQjs7QUFFRDtJQUNJLGdCQUFnQjs7Q0FFbkI7O0FBQ0Q7SUFDSSxrQkFBa0I7QUFDdEIsaUJBQWlCO0NBQ2hCOztBQUVEO0lBQ0ksZUFBZTtDQUNsQjs7QUFFRDtJQUNJLGlCQUFpQjtJQUNqQixXQUFXO0lBQ1gsNkJBQTZCO0NBQ2hDOztBQUVEO0lBQ0ksaUJBQWlCO0lBQ2pCLGlCQUFpQjtJQUNqQixrQ0FBa0M7Q0FDckM7O0FBR0Q7SUFDSSxrQkFBa0I7SUFDbEIsZUFBZTtJQUNmLGlCQUFpQjtDQUNwQjs7QUFJRDtJQUNJLGlCQUFpQjtJQUNqQixrQ0FBa0M7O0NBRXJDOztBQUVEO0lBQ0ksaUJBQWlCO0lBQ2pCLGtDQUFrQztDQUNyQzs7QUFFRDtJQUNJLGlCQUFpQjtJQUNqQixrQ0FBa0M7Q0FDckM7O0FBRUQ7SUFDSTtJQUNBLFdBQVc7SUFDWCxvQkFBb0I7S0FDbkI7Q0FDSjs7QUFFRDtJQUNJO1FBQ0ksY0FBYztLQUNqQjtDQUNKIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9jdXN0b21lck1vZHVsZS9wZHBhZ2UvcGRwYWdlLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZmxleGNvbnRhaW5lcntcbiAgICBkaXNwbGF5OmZsZXg7XG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1hcm91bmQ7XG4gICAgdGV4dC1hbGlnbjogbGVmdDtcbn1cblxuYXtcbiAgICBjb2xvcjpub25lO1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbn1cbi50YWdjc3N7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGNvbG9yOiAjNjc2NzY4O1xuICAgIGxpbmUtaGVpZ2h0OiAxNDAlO1xuXG59XG5cbiNoZWFkaW5ne1xuICAgIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCBsaWdodGdyYXk7XG59XG4jaW5mb3tcbiAgICBtYXJnaW46MCUgMTAlO1xuICAgIHRleHQtYWxpZ246bGVmdDtcbiAgICBwYWRkaW5nOjEwcHg7XG59XG4jc2lkZW5hdntcbiAgICB3aWR0aDogMjAlO1xuICAgIG1hcmdpbjogMiUgMCUgMiUgMTAlO1xuICAgIHBhZGRpbmc6IDAlIDIlIDAlIDAlO1xuICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkIGxpZ2h0Z3JheTtcbn1cblxuI2NvbnRlbnR7XG4gICAgd2lkdGg6IDkwJTtcbiAgICBtYXJnaW46IDIlIDklIDIlIDAlO1xufVxuXG4udGFnY3NzOmhvdmVye2NvbG9yOiMwOTZ9XG5cbiNjYXR7XG4gICAgYm9yZGVyLWJvdHRvbTogMnB4IHNvbGlkICM4NGMyMjU7XG4gICAgY29sb3I6IHJnYmEoMzQsMzQsMzQsLjg3KTtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gICAgcGFkZGluZy1ib3R0b206IDJweDtcbiAgICBmb250LXNpemU6IDFyZW07XG4gICBcbn1cblxuI2RhdGFjb250YWluZXJ7XG4gICAgbWFyZ2luOjIlIDAlO1xufVxuXG4jY2F0bmFtZXtcbiAgICBtYXJnaW4tbGVmdDo1cHg7XG4gICBcbn1cbiNzdWJjYXRuYW1le1xuICAgIGZvbnQtc2l6ZTogMC45cmVtO1xubWFyZ2luLWxlZnQ6MTVweDtcbn1cblxuLmluZm9oZWFke1xuICAgIGZvbnQtc2l6ZToxcmVtO1xufVxuXG4uaW5mb2RhdGF7XG4gICAgZm9udC1zaXplOjAuOHJlbTtcbiAgICBjb2xvcjojNDQ0O1xuICAgIG1hcmdpbi1ib3R0b206NXB4ICFpbXBvcnRhbnQ7XG59XG5cbiNwcm9kdWN0aGVhZHtcbiAgICBmb250LXNpemU6MS42cmVtO1xuICAgIHBhZGRpbmc6MTBweCAwcHg7XG4gICAgYm9yZGVyLWJvdHRvbToxcHggc29saWQgbGlnaHRncmF5O1xufVxuXG5cbi5wcm9kdWN0bmFtZXtcbiAgICBtYXJnaW4tbGVmdDogMjVweDtcbiAgICBjb2xvcjogIzY3Njc2ODtcbiAgICBmb250LXNpemU6MC44cmVtO1xufVxuXG5cblxuI2Fib3V0e1xuICAgIHBhZGRpbmc6MTBweCAwcHg7XG4gICAgYm9yZGVyLWJvdHRvbToxcHggc29saWQgbGlnaHRncmF5O1xuXG59XG5cbiNiZW5lZml0c0FuZFVzZXN7XG4gICAgcGFkZGluZzoxMHB4IDBweDtcbiAgICBib3JkZXItYm90dG9tOjFweCBzb2xpZCBsaWdodGdyYXk7XG59XG5cbiNzdG9yYWdle1xuICAgIHBhZGRpbmc6MTBweCAwcHg7XG4gICAgYm9yZGVyLWJvdHRvbToxcHggc29saWQgbGlnaHRncmF5O1xufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOjg4OHB4KXtcbiAgICAjc2lkZW5hdntcbiAgICB3aWR0aDogMzUlO1xuICAgIG1hcmdpbjogMiUgMCUgMiUgNSU7XG4gICAgfVxufVxuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOjUwMHB4KXtcbiAgICAjc2lkZW5hdntcbiAgICAgICAgZGlzcGxheTogbm9uZTtcbiAgICB9XG59Il19 */"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/pdpage/pdpage.component.html":
+/*!*********************************************************************!*\
+  !*** ./src/app/modules/customerModule/pdpage/pdpage.component.html ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n  <div class='flexcontainer'>\n  <div *ngIf='category!=null' id='sidenav'> \n    <div id='heading'>\n      <span id='cat'>Category</span>\n    </div>\n    <div id='datacontainer'>\n  <div id='categories'>\n        <a [routerLink]=\"\" ><span id='catname' class='tagcss'>{{category.name | titlecase}}</span></a>\n  </div>\n  <div>\n      <a [routerLink]=\"\" ><span  id='subcatname' class='tagcss'>{{subcategory.name | titlecase}}</span></a>\n  </div>\n   <div>\n     <div *ngFor='let product of productArray'>\n      <a [routerLink]=\"\" > <span class='productname tagcss' >{{product.productName | titlecase}}</span></a>\n     </div>\n   </div>\n   </div>\n  </div>\n  <div id='sidenav' *ngIf='category==null'>\n Loading...\n  </div>\n  <div id='content' *ngIf='subproductData!=null' >\n      <cust-subproductdata [subproduct]='subproductData'></cust-subproductdata>\n  </div>\n</div>\n<div *ngIf='subproductData!=null' id='info'>\n  <div id='producthead'>\n\n {{subproductData.info.brand | titlecase}} &nbsp; {{subproductData.subproductName | titlecase}}\n\n  </div>\n    <div id='about' >\n        <div class='infohead'>\n            About\n             </div>\n  <p class='infodata'>{{subproductData.info.description}}</p>\n    </div>\n    <div id='storage'>\n        <div class='infohead'>\n           Storage And Uses\n             </div>\n      <p class='infodata'>{{subproductData.info.storageAndUses}}</p>\n    </div>\n  <div id='benefitsAndUses'>\n      <div class='infohead'>\n       Benefits And Uses\n           </div>\n    <p class='infodata'>\n      {{subproductData.info.benefitsAndUses}}\n    </p>\n  </div>\n  </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/pdpage/pdpage.component.ts":
+/*!*******************************************************************!*\
+  !*** ./src/app/modules/customerModule/pdpage/pdpage.component.ts ***!
+  \*******************************************************************/
+/*! exports provided: PdpageComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PdpageComponent", function() { return PdpageComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _moduleServices_categoryList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../moduleServices/categoryList */ "./src/app/modules/customerModule/moduleServices/categoryList.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_getSubproduct__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./services/getSubproduct */ "./src/app/modules/customerModule/pdpage/services/getSubproduct.ts");
+
+
+
+
+
+var PdpageComponent = /** @class */ (function () {
+    function PdpageComponent(categoryListSubject, route, subproductService) {
+        this.categoryListSubject = categoryListSubject;
+        this.route = route;
+        this.subproductService = subproductService;
+        this.errMess = null;
+        this.category = null;
+        this.subcategory = null;
+        this.productArray = null;
+        this.wholecategoryList = null;
+        this.subproductData = null;
+    }
+    PdpageComponent.prototype.setOutputCategoryAndItsFields = function () {
+        this.category = null;
+        this.subcategory = null;
+        this.productArray = null;
+        for (var _i = 0, _a = this.wholecategoryList; _i < _a.length; _i++) {
+            var category = _a[_i];
+            //console.log(category,this.subproductData);
+            if (this.subproductData.categoryId == category.categoryId) {
+                this.category = {
+                    name: category.categoryName,
+                    id: category.categoryId
+                };
+                for (var _b = 0, _c = category.subcategory; _b < _c.length; _b++) {
+                    var subcat = _c[_b];
+                    if (subcat.subcategoryId == this.subproductData.subcategoryId) {
+                        this.subcategory = {
+                            name: subcat.subcategoryName,
+                            id: subcat.subcategoryId
+                        };
+                        this.productArray = subcat.products;
+                        return;
+                    }
+                }
+            }
+        }
+    };
+    PdpageComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.params.subscribe(function (params) {
+            if (params != null) {
+                //console.log(params);
+                var id = params['id'];
+                //console.log(id);
+                _this.subproductService.getSP({ 'id': id }).subscribe(function (data) {
+                    if (data.status == 'S') {
+                        //console.log(data);
+                        _this.subproductData = data.subproduct;
+                        if (_this.wholecategoryList != null) {
+                            _this.setOutputCategoryAndItsFields();
+                        }
+                    }
+                    else {
+                        alert('Unknown Error');
+                    }
+                }, function (err) {
+                    if (err.message != null) {
+                        alert(err.message);
+                    }
+                    else {
+                        alert(err);
+                    }
+                });
+            }
+        });
+        this.categoryListSubject.getBehaviourSubject().subscribe(function (data) {
+            //console.log(data);
+            if (data != null) {
+                if (data.length != 0) {
+                    _this.wholecategoryList = data;
+                    if (_this.subproductData != null) {
+                        // //console.log('yo');
+                        _this.setOutputCategoryAndItsFields();
+                    }
+                }
+                else {
+                    _this.errMess = "No Data Found";
+                }
+            }
+        });
+    };
+    PdpageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-pdpage',
+            template: __webpack_require__(/*! ./pdpage.component.html */ "./src/app/modules/customerModule/pdpage/pdpage.component.html"),
+            providers: [_services_getSubproduct__WEBPACK_IMPORTED_MODULE_4__["SubProductService"]],
+            styles: [__webpack_require__(/*! ./pdpage.component.css */ "./src/app/modules/customerModule/pdpage/pdpage.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_moduleServices_categoryList__WEBPACK_IMPORTED_MODULE_2__["categoryList"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"], _services_getSubproduct__WEBPACK_IMPORTED_MODULE_4__["SubProductService"]])
+    ], PdpageComponent);
+    return PdpageComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/pdpage/services/getSubproduct.ts":
+/*!*************************************************************************!*\
+  !*** ./src/app/modules/customerModule/pdpage/services/getSubproduct.ts ***!
+  \*************************************************************************/
+/*! exports provided: SubProductService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubProductService", function() { return SubProductService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var src_app_globalmodel_url__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/globalmodel/url */ "./src/app/globalmodel/url.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
+
+
+
+
+
+
+
+var SubProductService = /** @class */ (function () {
+    function SubProductService(http) {
+        this.http = http;
+        this.getsp = src_app_globalmodel_url__WEBPACK_IMPORTED_MODULE_2__["url"].getSubproduct;
+    }
+    SubProductService.prototype.handleError = function (error) {
+        var err = '';
+        if (error.error instanceof ErrorEvent) {
+            err = 'FrontEnd Error';
+        }
+        else if (error.status != 0) {
+            err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
+        }
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
+    };
+    ;
+    SubProductService.prototype.getSP = function (id) {
+        return this.http.post(this.getsp, id, src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__["httpOptions"].jsonHeaders).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(this.handleError));
+    };
+    SubProductService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
+    ], SubProductService);
+    return SubProductService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/customerModule/product-card/product-card.component.css":
 /*!********************************************************************************!*\
   !*** ./src/app/modules/customerModule/product-card/product-card.component.css ***!
@@ -5849,7 +6180,7 @@ module.exports = ".image-section{\n    margin:0.5rem 0rem;\n}\n.pricedel{\n    t
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf='product.imageUrls.length!=0 && product.info.priceAndAmount[0].discount!=null' id='productcard'>\n    <mat-card  id='cardcontainer' [ngClass]=\"{'white':!amountDisable,'floral':amountDisable}\">\n      \n        <mat-card-content id='productcontent'>\n          <div id='cardheading'>\n            <div id='discountcontainer'>GET {{discount}}% OFF *   </div>\n            </div>\n            <div class='image-section'>\n                <div class='image-container'  *ngIf='product.imageUrls!=null'>\n                  <a href=\"#\" *ngIf='product.imageUrls[0]!=null'>\n                   <img *ngIf='product.imageUrls[0].uri!=null' [src]=\"product.imageUrls[0].uri\" >\n                   </a>\n                 </div>\n                   </div>\n                   <div class='name-section'>\n                   <div id='brand'><h6>{{product.info.brand}}</h6></div>\n                    <div>\n                      {{product.subproductName | titlecase}}\n                      </div>\n                   </div>\n         <div id='selectamount'>\n            <mat-form-field>\n                \n                <mat-select [(ngModel)]=\"selectedAmount\" name=\"amount\" (selectionChange)='selectchange(selectedAmount,null,0)'>\n                  <mat-option *ngFor=\"let amountinfo of product.info.priceAndAmount;let i=index\" [value]=\"amountinfo\">\n                   <span *ngIf='amountinfo.amount!=null && amountinfo.price!=null && amountinfo.suffix!=null' id='amountprice'> {{amountinfo.amount}}{{amountinfo.suffix}} - Rs {{amountinfo.price}}</span>\n                  </mat-option>\n                </mat-select>\n              </mat-form-field>\n         </div>\n        \n         <div class='pricedel' *ngIf='selectedAmount!=null'>\n           <div *ngIf='selectedAmount.price!=null' id='mrpsell'>\n              MRP:Rs <del>{{selectedAmount.price}}</del> <span id='sellprice'> {{sellprice}}</span>\n           </div>\n           <div *ngIf='selectedAmount.price==null'>\n               Some Error\n           </div>\n           <div id='deliverydetails'>\n              <p>\n              <mat-icon>directions_car</mat-icon><span class='deliveryText'>Standard Delivery: Tomorrow Morning</span></p>\n            <p *ngIf='product.info.isExpress==true'> <mat-icon>directions_car</mat-icon><span class='deliveryText'> Delivery: In 90 minutes</span></p>\n           </div>\n        \n<div *ngIf=\"selectedAmount.instock=='true'\">\n    <adddel [product]='product' [productCart]='cartproduct' [stackTrace]='stackTrace' (amountChange)=setAmtOption($event)\n    ></adddel>\n</div>\n<div class='stock' *ngIf=\"selectedAmount.instock=='false'\">\n  Out Of Stock\n</div>\n          </div>\n        </mat-card-content>\n      \n      </mat-card>\n\n</div>"
+module.exports = "<div *ngIf='product.imageUrls.length!=0 && product.info.priceAndAmount[0].discount!=null' id='productcard'>\n    <mat-card  id='cardcontainer' [ngClass]=\"{'white':!amountDisable,'floral':amountDisable}\">\n      \n        <mat-card-content id='productcontent'>\n          <div id='cardheading'>\n            <div id='discountcontainer'>GET {{discount}}% OFF *   </div>\n            </div>\n            <div class='image-section'>\n                <div class='image-container'  *ngIf='product.imageUrls!=null'>\n                  <a [routerLink]=\"['/customer/pd',product.subproductId]\" *ngIf='product.imageUrls[0]!=null'>\n                   <img *ngIf='product.imageUrls[0].uri!=null' [src]=\"product.imageUrls[0].uri\" >\n                   </a>\n                 </div>\n                   </div>\n                   <div class='name-section'>\n                   <div id='brand'><h6>{{product.info.brand}}</h6></div>\n                    <div>\n                      {{product.subproductName | titlecase}}\n                      </div>\n                   </div>\n         <div id='selectamount'>\n            <mat-form-field>\n                \n                <mat-select [(ngModel)]=\"selectedAmount\" name=\"amount\" (selectionChange)='selectchange(selectedAmount,null,0)'>\n                  <mat-option *ngFor=\"let amountinfo of product.info.priceAndAmount;let i=index\" [value]=\"amountinfo\">\n                   <span *ngIf='amountinfo.amount!=null && amountinfo.price!=null && amountinfo.suffix!=null' id='amountprice'> {{amountinfo.amount}}{{amountinfo.suffix}} - Rs {{amountinfo.price}}</span>\n                  </mat-option>\n                </mat-select>\n              </mat-form-field>\n         </div>\n        \n         <div class='pricedel' *ngIf='selectedAmount!=null'>\n           <div *ngIf='selectedAmount.price!=null' id='mrpsell'>\n              MRP:Rs <del>{{selectedAmount.price}}</del> <span id='sellprice'> {{sellprice}}</span>\n           </div>\n           <div *ngIf='selectedAmount.price==null'>\n               Some Error\n           </div>\n           <div id='deliverydetails'>\n              <p>\n              <mat-icon>directions_car</mat-icon><span class='deliveryText'>Standard Delivery: Tomorrow Morning</span></p>\n            <p *ngIf='product.info.isExpress==true'> <mat-icon>directions_car</mat-icon><span class='deliveryText'> Delivery: In 90 minutes</span></p>\n           </div>\n        \n<div *ngIf=\"selectedAmount.instock=='true'\">\n    <adddel [product]='product' [productCart]='cartproduct' [stackTrace]='stackTrace' (amountChange)=setAmtOption($event)\n    ></adddel>\n</div>\n<div class='stock' *ngIf=\"selectedAmount.instock=='false'\">\n  Out Of Stock\n</div>\n          </div>\n        </mat-card-content>\n      \n      </mat-card>\n\n</div>"
 
 /***/ }),
 
@@ -5959,12 +6290,8 @@ var ProductCardComponent = /** @class */ (function () {
         this.cartproduct.CartPId = cartproductid;
         this.cartproduct.Amt = parseFloat(amount.amount);
         this.cartproduct.Suffix = amount.suffix;
-        this.cartproduct.CostPr = parseFloat(amount.price);
-        this.cartproduct.sellPr = parseFloat(this.sellprice);
         this.cartproduct.SubPId = this.product.subproductId;
         this.cartproduct.SubPName = this.product.subproductName;
-        this.cartproduct.Brand = this.product.info.brand;
-        this.cartproduct.IsExp = this.product.info.isExpress;
         this.setAmtOption(quantity);
         //console.log(this.cartproduct);
     };
@@ -5976,6 +6303,9 @@ var ProductCardComponent = /** @class */ (function () {
         else {
             this.amountDisable = false;
         }
+    };
+    ProductCardComponent.prototype.ngOnDestroy = function () {
+        // this.cartdto.returncartdto().unsubscribe();
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('productObj'),
@@ -6000,233 +6330,125 @@ var ProductCardComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/modules/customerModule/productcarousel/productcarousel.component.css":
-/*!**************************************************************************************!*\
-  !*** ./src/app/modules/customerModule/productcarousel/productcarousel.component.css ***!
-  \**************************************************************************************/
+/***/ "./src/app/modules/customerModule/product-image/product-image.component.css":
+/*!**********************************************************************************!*\
+  !*** ./src/app/modules/customerModule/product-image/product-image.component.css ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".flexcontainer{\n    margin-top:1rem;\n    display:flex;\n    justify-content: space-around;\n}\n\n.flexcontainer div{\n   margin:0.5rem;\n}\n\n#carouselcontainer{\n    margin-top:1rem;\n    position: relative;\n    min-height: 482px;\n}\n\n#carouselcontainer ::ng-deep .mat-tab-header{\n    display:none;\n}\n\n#leftarrow{\n    \n    position:absolute;\n    z-index: 3;\n    left:-0.5%;\n    top:50%;\n    }\n\n#leftarrow ::ng-deep .mat-icon{\n        background-color:white;\n        cursor: pointer;\n        width:auto;\n        height:auto;\n        padding:10px 0px;\n        border:1px solid lightgrey;\n        box-sizing: border-box;\n        vertical-align:middle;\n        font-size:20px !important;\n        color:lightgrey;\n    }\n\n#rightarrow{\n\n    position:absolute;\n    z-index: 3;\n    right:-0.5%;\n    top:50%;\n\n}\n\n#rightarrow ::ng-deep .mat-icon{\n    font-size:20px !important;\n    \n    font-weight: 200;\n    color:lightgrey;\n    background-color:white;\n    cursor: pointer;\n    width:auto;\n    height:auto;\n    padding:10px 0px;\n    border:1px solid lightgrey;\n    box-sizing: border-box;\n    vertical-align:middle;\n   \n}\n\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9jdXN0b21lck1vZHVsZS9wcm9kdWN0Y2Fyb3VzZWwvcHJvZHVjdGNhcm91c2VsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxnQkFBZ0I7SUFDaEIsYUFBYTtJQUNiLDhCQUE4QjtDQUNqQzs7QUFFRDtHQUNHLGNBQWM7Q0FDaEI7O0FBRUQ7SUFDSSxnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLGtCQUFrQjtDQUNyQjs7QUFFRDtJQUNJLGFBQWE7Q0FDaEI7O0FBR0Q7O0lBRUksa0JBQWtCO0lBQ2xCLFdBQVc7SUFDWCxXQUFXO0lBQ1gsUUFBUTtLQUNQOztBQUNEO1FBQ0ksdUJBQXVCO1FBQ3ZCLGdCQUFnQjtRQUNoQixXQUFXO1FBQ1gsWUFBWTtRQUNaLGlCQUFpQjtRQUNqQiwyQkFBMkI7UUFDM0IsdUJBQXVCO1FBQ3ZCLHNCQUFzQjtRQUN0QiwwQkFBMEI7UUFDMUIsZ0JBQWdCO0tBQ25COztBQUdMOztJQUVJLGtCQUFrQjtJQUNsQixXQUFXO0lBQ1gsWUFBWTtJQUNaLFFBQVE7O0NBRVg7O0FBR0Q7SUFDSSwwQkFBMEI7O0lBRTFCLGlCQUFpQjtJQUNqQixnQkFBZ0I7SUFDaEIsdUJBQXVCO0lBQ3ZCLGdCQUFnQjtJQUNoQixXQUFXO0lBQ1gsWUFBWTtJQUNaLGlCQUFpQjtJQUNqQiwyQkFBMkI7SUFDM0IsdUJBQXVCO0lBQ3ZCLHNCQUFzQjs7Q0FFekIiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2N1c3RvbWVyTW9kdWxlL3Byb2R1Y3RjYXJvdXNlbC9wcm9kdWN0Y2Fyb3VzZWwuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5mbGV4Y29udGFpbmVye1xuICAgIG1hcmdpbi10b3A6MXJlbTtcbiAgICBkaXNwbGF5OmZsZXg7XG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1hcm91bmQ7XG59XG5cbi5mbGV4Y29udGFpbmVyIGRpdntcbiAgIG1hcmdpbjowLjVyZW07XG59XG5cbiNjYXJvdXNlbGNvbnRhaW5lcntcbiAgICBtYXJnaW4tdG9wOjFyZW07XG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgIG1pbi1oZWlnaHQ6IDQ4MnB4O1xufVxuXG4jY2Fyb3VzZWxjb250YWluZXIgOjpuZy1kZWVwIC5tYXQtdGFiLWhlYWRlcntcbiAgICBkaXNwbGF5Om5vbmU7XG59XG5cblxuI2xlZnRhcnJvd3tcbiAgICBcbiAgICBwb3NpdGlvbjphYnNvbHV0ZTtcbiAgICB6LWluZGV4OiAzO1xuICAgIGxlZnQ6LTAuNSU7XG4gICAgdG9wOjUwJTtcbiAgICB9XG4gICAgI2xlZnRhcnJvdyA6Om5nLWRlZXAgLm1hdC1pY29ue1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIHdpZHRoOmF1dG87XG4gICAgICAgIGhlaWdodDphdXRvO1xuICAgICAgICBwYWRkaW5nOjEwcHggMHB4O1xuICAgICAgICBib3JkZXI6MXB4IHNvbGlkIGxpZ2h0Z3JleTtcbiAgICAgICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgICAgICAgdmVydGljYWwtYWxpZ246bWlkZGxlO1xuICAgICAgICBmb250LXNpemU6MjBweCAhaW1wb3J0YW50O1xuICAgICAgICBjb2xvcjpsaWdodGdyZXk7XG4gICAgfVxuXG5cbiNyaWdodGFycm93e1xuXG4gICAgcG9zaXRpb246YWJzb2x1dGU7XG4gICAgei1pbmRleDogMztcbiAgICByaWdodDotMC41JTtcbiAgICB0b3A6NTAlO1xuXG59XG5cblxuI3JpZ2h0YXJyb3cgOjpuZy1kZWVwIC5tYXQtaWNvbntcbiAgICBmb250LXNpemU6MjBweCAhaW1wb3J0YW50O1xuICAgIFxuICAgIGZvbnQtd2VpZ2h0OiAyMDA7XG4gICAgY29sb3I6bGlnaHRncmV5O1xuICAgIGJhY2tncm91bmQtY29sb3I6d2hpdGU7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIHdpZHRoOmF1dG87XG4gICAgaGVpZ2h0OmF1dG87XG4gICAgcGFkZGluZzoxMHB4IDBweDtcbiAgICBib3JkZXI6MXB4IHNvbGlkIGxpZ2h0Z3JleTtcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xuICAgIHZlcnRpY2FsLWFsaWduOm1pZGRsZTtcbiAgIFxufVxuXG4iXX0= */"
+module.exports = ".imageArraySection{\n    display: flex;\n    \n}\n\n.selected{   \n    border:1px solid green;\n    border-radius: 5px;\n    overflow:hidden;\n}\n\n.imagecontainer{\n    width:100%;\n    border: 1px solid lightgray;\n    cursor: pointer;\n}\n\n.imagecontainer img{\n    width:100%;\n\n}\n\n#selectimagecontainer{\n    width:100%;\n}\n\n#selectimagecontainer img{\n    width:100%;\n}\n\n.imageArraySection > div{\n    width:25%;\n    margin:5px;\n   \n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9jdXN0b21lck1vZHVsZS9wcm9kdWN0LWltYWdlL3Byb2R1Y3QtaW1hZ2UuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLGNBQWM7O0NBRWpCOztBQUVEO0lBQ0ksdUJBQXVCO0lBQ3ZCLG1CQUFtQjtJQUNuQixnQkFBZ0I7Q0FDbkI7O0FBRUQ7SUFDSSxXQUFXO0lBQ1gsNEJBQTRCO0lBQzVCLGdCQUFnQjtDQUNuQjs7QUFFRDtJQUNJLFdBQVc7O0NBRWQ7O0FBRUQ7SUFDSSxXQUFXO0NBQ2Q7O0FBRUQ7SUFDSSxXQUFXO0NBQ2Q7O0FBRUQ7SUFDSSxVQUFVO0lBQ1YsV0FBVzs7Q0FFZCIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tZXJNb2R1bGUvcHJvZHVjdC1pbWFnZS9wcm9kdWN0LWltYWdlLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuaW1hZ2VBcnJheVNlY3Rpb257XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBcbn1cblxuLnNlbGVjdGVkeyAgIFxuICAgIGJvcmRlcjoxcHggc29saWQgZ3JlZW47XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIG92ZXJmbG93OmhpZGRlbjtcbn1cblxuLmltYWdlY29udGFpbmVye1xuICAgIHdpZHRoOjEwMCU7XG4gICAgYm9yZGVyOiAxcHggc29saWQgbGlnaHRncmF5O1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuLmltYWdlY29udGFpbmVyIGltZ3tcbiAgICB3aWR0aDoxMDAlO1xuXG59XG5cbiNzZWxlY3RpbWFnZWNvbnRhaW5lcntcbiAgICB3aWR0aDoxMDAlO1xufVxuXG4jc2VsZWN0aW1hZ2Vjb250YWluZXIgaW1ne1xuICAgIHdpZHRoOjEwMCU7XG59XG5cbi5pbWFnZUFycmF5U2VjdGlvbiA+IGRpdntcbiAgICB3aWR0aDoyNSU7XG4gICAgbWFyZ2luOjVweDtcbiAgIFxufSJdfQ== */"
 
 /***/ }),
 
-/***/ "./src/app/modules/customerModule/productcarousel/productcarousel.component.html":
-/*!***************************************************************************************!*\
-  !*** ./src/app/modules/customerModule/productcarousel/productcarousel.component.html ***!
-  \***************************************************************************************/
+/***/ "./src/app/modules/customerModule/product-image/product-image.component.html":
+/*!***********************************************************************************!*\
+  !*** ./src/app/modules/customerModule/product-image/product-image.component.html ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <div id='carouselcontainer'>\n    \n    <mat-tab-group [selectedIndex]=\"carouselIndex\"\n    (selectedIndexChange)=\"setCarouselIndex($event)\" headerPosition=\"below\" mat-align-tabs='center' animationDuration=\"1500ms\">\n        <mat-tab label='0'>\n          <div class='flexcontainer'>\n          <div *ngFor='let product of firstbasketlist;let i=index'>\n          \n         <product-card [productObj]='product'></product-card>\n         </div>\n          </div>\n          </mat-tab>\n          <mat-tab label='1'>\n         <div class='flexcontainer'>\n              <div *ngFor='let product of secondbasketlist;let i=index'>\n          <a href='#'>\n                <product-card [productObj]='product'></product-card>\n                </a>\n                </div>\n                </div>\n          </mat-tab>\n       \n      </mat-tab-group>\n      <div id='leftarrow'><mat-icon (click)='shiftleft()'>keyboard_arrow_left</mat-icon></div>\n      <div id='rightarrow'><mat-icon (click)='shiftright()'>keyboard_arrow_right</mat-icon></div>\n      </div>\n    </div>"
+module.exports = "<div>\n  <div id='selectimagecontainer'>\n   <img [src]='selectedImage.uri'>\n  </div>\n<div>\n<div class='imageArraySection'>\n<div *ngFor='let image of imagesArray ; let i =index'>\n <div (click)='selectThisImage(i)' class='imagecontainer' [ngClass]=\"{'selected':currentIndex==i}\">\n   <img [src]='image.uri'>\n </div>\n</div>\n</div>\n\n</div>\n</div>"
 
 /***/ }),
 
-/***/ "./src/app/modules/customerModule/productcarousel/productcarousel.component.ts":
-/*!*************************************************************************************!*\
-  !*** ./src/app/modules/customerModule/productcarousel/productcarousel.component.ts ***!
-  \*************************************************************************************/
-/*! exports provided: ProductcarouselComponent */
+/***/ "./src/app/modules/customerModule/product-image/product-image.component.ts":
+/*!*********************************************************************************!*\
+  !*** ./src/app/modules/customerModule/product-image/product-image.component.ts ***!
+  \*********************************************************************************/
+/*! exports provided: ProductImageComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductcarouselComponent", function() { return ProductcarouselComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductImageComponent", function() { return ProductImageComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 
 
-var ProductcarouselComponent = /** @class */ (function () {
-    function ProductcarouselComponent() {
-        this.MAXTABS = 1;
-        this.firstbasketlist = [];
-        this.secondbasketlist = [];
-        this.carouselIndex = 0;
-        this.imageData = [
-            { "subproductId": "35", "subproductName": "Washington Potato", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "36", "subproductName": "Alebela Potato", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "22", "subproductName": "Kashmeeri Onion", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "13", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "23", "subproductName": "Washington Onion", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "24", "subproductName": "Alebela Onion", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "dozen", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "25", "subproductName": "Washington Potato", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "26", "subproductName": "Alebela Potato", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "27", "subproductName": "Kashmeeri Onion", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "28", "subproductName": "Washington Onion", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] },
-            { "subproductId": "29", "subproductName": "Alebela Onion", "info": {
-                    "isExpress": false,
-                    "brand": 'Fresho',
-                    "description": "lsdjlfsdkjflsdflsdlfsdkljflsdf",
-                    "benefitsAndUses": "dlsjfldsjflsdjlfsdkfjldsjfsl",
-                    "priceAndAmount": [
-                        { "amount": "3", "suffix": "kg", "price": "50", "discount": "5%"
-                        },
-                        { "amount": "5", "suffix": "kg", "price": "70", "discount": "5%"
-                        },
-                        { "amount": "10", "suffix": "kg", "price": "100", "discount": "5%"
-                        }
-                    ]
-                },
-                "imageUrls": [{ "uri": "http://www.bite.co.nz/images/recipes/Generic_Tomatoes1.jpg?width=1200&height=800&upscale=false" }, { "uri": "http://ichef.bbci.co.uk/wwfeatures/live/624_351/images/live/p0/4w/46/p04w46sp.jpg" }] }
-        ];
+var ProductImageComponent = /** @class */ (function () {
+    function ProductImageComponent() {
+        this.imagesArray = null;
+        this.currentIndex = null;
+        this.selectedImage = null;
     }
-    ProductcarouselComponent.prototype.ngOnInit = function () {
-        if (this.imageData.length % 2 == 0) {
-            this.firstbasketlist = this.imageData.slice(0, (this.imageData.length / 2));
-            this.secondbasketlist = this.imageData.slice(((this.imageData.length / 2)), this.imageData.length);
-            console.log(this.firstbasketlist, this.secondbasketlist);
-        }
+    ProductImageComponent.prototype.ngOnInit = function () {
+        this.selectedImage = this.imagesArray[0];
+        this.currentIndex = 0;
     };
-    ProductcarouselComponent.prototype.setCarouselIndex = function (index) {
-        this.carouselIndex = index;
+    ProductImageComponent.prototype.selectThisImage = function (index) {
+        this.currentIndex = index;
+        this.selectThisImage = this.imagesArray[index];
     };
-    ProductcarouselComponent.prototype.setMAXTABS = function (maxtabs) {
-        this.MAXTABS = maxtabs;
-    };
-    ProductcarouselComponent.prototype.shiftright = function () {
-        if (this.carouselIndex < this.MAXTABS) {
-            this.carouselIndex++;
-        }
-    };
-    ProductcarouselComponent.prototype.shiftleft = function () {
-        if (this.carouselIndex > 0) {
-            this.carouselIndex--;
-        }
-    };
-    ProductcarouselComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], ProductImageComponent.prototype, "imagesArray", void 0);
+    ProductImageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-productcarousel',
-            template: __webpack_require__(/*! ./productcarousel.component.html */ "./src/app/modules/customerModule/productcarousel/productcarousel.component.html"),
-            styles: [__webpack_require__(/*! ./productcarousel.component.css */ "./src/app/modules/customerModule/productcarousel/productcarousel.component.css")]
+            selector: 'cust-product-image',
+            template: __webpack_require__(/*! ./product-image.component.html */ "./src/app/modules/customerModule/product-image/product-image.component.html"),
+            styles: [__webpack_require__(/*! ./product-image.component.css */ "./src/app/modules/customerModule/product-image/product-image.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
-    ], ProductcarouselComponent);
-    return ProductcarouselComponent;
+    ], ProductImageComponent);
+    return ProductImageComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/product/product.component.css":
+/*!**********************************************************************!*\
+  !*** ./src/app/modules/customerModule/product/product.component.css ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tZXJNb2R1bGUvcHJvZHVjdC9wcm9kdWN0LmNvbXBvbmVudC5jc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/product/product.component.html":
+/*!***********************************************************************!*\
+  !*** ./src/app/modules/customerModule/product/product.component.html ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  product works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/product/product.component.ts":
+/*!*********************************************************************!*\
+  !*** ./src/app/modules/customerModule/product/product.component.ts ***!
+  \*********************************************************************/
+/*! exports provided: ProductComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductComponent", function() { return ProductComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var ProductComponent = /** @class */ (function () {
+    function ProductComponent() {
+    }
+    ProductComponent.prototype.ngOnInit = function () {
+    };
+    ProductComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-product',
+            template: __webpack_require__(/*! ./product.component.html */ "./src/app/modules/customerModule/product/product.component.html"),
+            styles: [__webpack_require__(/*! ./product.component.css */ "./src/app/modules/customerModule/product/product.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ProductComponent);
+    return ProductComponent;
 }());
 
 
@@ -6338,6 +6560,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -6353,8 +6577,11 @@ var SearchService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_6__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["throwError"])(err);
     };
@@ -6438,15 +6665,21 @@ var SpComponent = /** @class */ (function () {
                 _this.label = params.get('label');
                 _this.setreqparams(params);
                 if (_this.paramsendobj != null && _this.category != null && _this.searchUrl != null) {
-                    _this.searchservice.searchquery(_this.searchUrl, { 'categoryName': _this.category, 'subcategoryName': _this.label, 'params': _this.paramsendobj }).subscribe(function (data) {
+                    _this.searchservice.searchquery(_this.searchUrl, { 'categoryName': _this.category,
+                        'subcategoryName': _this.label, 'params': _this.paramsendobj }).subscribe(function (data) {
                         if (data.status == 'S') {
-                            console.log(data.products);
+                            // console.log(data.products);
                             _this.selectedsubCat = data.products.subcategoryName;
                             _this.subproductarray = data.products;
                             _this.createsubproductlist();
                         }
                     }, function (err) {
-                        console.log(err);
+                        if (err.message != null) {
+                            alert(err.message);
+                        }
+                        else {
+                            alert(err);
+                        }
                     });
                 }
             }
@@ -6474,6 +6707,265 @@ var SpComponent = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _services_searchService__WEBPACK_IMPORTED_MODULE_3__["SearchService"]])
     ], SpComponent);
     return SpComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.css":
+/*!************************************************************************************************!*\
+  !*** ./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.css ***!
+  \************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".added{\n    background-color: mediumaquamarine;\n    width:15%;\n    text-align: center;\n    color: white;\n    padding: 10px 0px;\n}\n\n   \n.datacontainer{\n    background: rgba(132,194,37,.2);\n    padding: 5px 0px 20px 0px;\n    display: flex;\n    justify-content: space-around;\n    width:85%;\n    font-size:0.8rem;\n}\n\n   \n.flexcontainer{\n    cursor: pointer;\n    display: flex;\n    margin:8px 0px;\n\n}\n\n   \n.datacontainer:hover{\n    box-shadow: 0px 5px 5px lightgray;\n}\n\n   \n#disc{\n    color: #ba5252;\n}\n\n   \n#light{\ncolor:#979797;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9jdXN0b21lck1vZHVsZS9zdWJwcm9kdWN0LWFtdC1wcmljZS9zdWJwcm9kdWN0LWFtdC1wcmljZS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksbUNBQW1DO0lBQ25DLFVBQVU7SUFDVixtQkFBbUI7SUFDbkIsYUFBYTtJQUNiLGtCQUFrQjtDQUNyQjs7O0FBR0Q7SUFDSSxnQ0FBZ0M7SUFDaEMsMEJBQTBCO0lBQzFCLGNBQWM7SUFDZCw4QkFBOEI7SUFDOUIsVUFBVTtJQUNWLGlCQUFpQjtDQUNwQjs7O0FBRUQ7SUFDSSxnQkFBZ0I7SUFDaEIsY0FBYztJQUNkLGVBQWU7O0NBRWxCOzs7QUFDRDtJQUNJLGtDQUFrQztDQUNyQzs7O0FBQ0Q7SUFDSSxlQUFlO0NBQ2xCOzs7QUFDRDtBQUNBLGNBQWM7Q0FDYiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tZXJNb2R1bGUvc3VicHJvZHVjdC1hbXQtcHJpY2Uvc3VicHJvZHVjdC1hbXQtcHJpY2UuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5hZGRlZHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiBtZWRpdW1hcXVhbWFyaW5lO1xuICAgIHdpZHRoOjE1JTtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgY29sb3I6IHdoaXRlO1xuICAgIHBhZGRpbmc6IDEwcHggMHB4O1xufVxuXG4gICBcbi5kYXRhY29udGFpbmVye1xuICAgIGJhY2tncm91bmQ6IHJnYmEoMTMyLDE5NCwzNywuMik7XG4gICAgcGFkZGluZzogNXB4IDBweCAyMHB4IDBweDtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYXJvdW5kO1xuICAgIHdpZHRoOjg1JTtcbiAgICBmb250LXNpemU6MC44cmVtO1xufVxuXG4uZmxleGNvbnRhaW5lcntcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBtYXJnaW46OHB4IDBweDtcblxufVxuLmRhdGFjb250YWluZXI6aG92ZXJ7XG4gICAgYm94LXNoYWRvdzogMHB4IDVweCA1cHggbGlnaHRncmF5O1xufVxuI2Rpc2N7XG4gICAgY29sb3I6ICNiYTUyNTI7XG59XG4jbGlnaHR7XG5jb2xvcjojOTc5Nzk3O1xufSJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.html":
+/*!*************************************************************************************************!*\
+  !*** ./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.html ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n  <div (click)='setThisAmt()' class='flexcontainer'>\n<div class='datacontainer'>\n  <div >{{amtpriceobj.amount}}{{amtpriceobj.suffix}}</div>\n  \n   <div> Rs {{sellprice}} &nbsp;<span id='light'> MRP:<del>Rs {{amtpriceobj.price}}</del> </span></div>\n<div id='disc'>\n    {{amtpriceobj.discount}} OFF\n</div>\n  </div>\n\n<div  class='added' *ngIf='amtpriceobj.isadded==true'>\n  ADDED\n</div>\n  </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.ts":
+/*!***********************************************************************************************!*\
+  !*** ./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.ts ***!
+  \***********************************************************************************************/
+/*! exports provided: SubproductAmtPriceComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubproductAmtPriceComponent", function() { return SubproductAmtPriceComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var SubproductAmtPriceComponent = /** @class */ (function () {
+    function SubproductAmtPriceComponent() {
+        this.selectAmt = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.discount = null;
+        this.sellprice = null;
+        this.amtpriceobj = null;
+    }
+    Object.defineProperty(SubproductAmtPriceComponent.prototype, "Amtpiceobj", {
+        set: function (val) {
+            this.amtpriceobj = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    SubproductAmtPriceComponent.prototype.calculate = function () {
+        this.discount = parseFloat(this.amtpriceobj.discount).toString();
+        this.sellprice = ((parseFloat(this.amtpriceobj.price) - (0.01 * parseInt(this.amtpriceobj.discount) * parseFloat(this.amtpriceobj.price))).toFixed(2));
+    };
+    SubproductAmtPriceComponent.prototype.ngOnInit = function () {
+        this.calculate();
+    };
+    SubproductAmtPriceComponent.prototype.setThisAmt = function () {
+        this.selectAmt.emit(this.amtpriceobj);
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Object])
+    ], SubproductAmtPriceComponent.prototype, "Amtpiceobj", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], SubproductAmtPriceComponent.prototype, "selectAmt", void 0);
+    SubproductAmtPriceComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'cust-subproduct-amt-price',
+            template: __webpack_require__(/*! ./subproduct-amt-price.component.html */ "./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.html"),
+            styles: [__webpack_require__(/*! ./subproduct-amt-price.component.css */ "./src/app/modules/customerModule/subproduct-amt-price/subproduct-amt-price.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], SubproductAmtPriceComponent);
+    return SubproductAmtPriceComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/subproductdata/subproductdata.component.css":
+/*!************************************************************************************!*\
+  !*** ./src/app/modules/customerModule/subproductdata/subproductdata.component.css ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".subproductcontainer{\n    display: flex;\n    justify-content: space-around;\n    text-align: left;\n}\n\n#brand{\n    border-bottom: 1px solid #666;\n    font-size:0.8rem;\n}\n\n#imagesection{\n    margin: 0px 20px;\n    width: 100%;\n}\n\n#datasection{\n    width:100%;\n}\n\n#disc{\n    margin-left:0.5rem;\n    color: #ba5252;\n    font-size: 0.7rem;\n}\n\n#price{\n    margin-left:0.5rem;\n    color: #222;\n    font-size: 1rem;\n}\n\n.graytext{\n    font-size: 0.7rem;\n  color: #676768;\n}\n\n#cartaddsection{\n    margin:10px 0px;\n}\n\n#amtheading{\n    margin:10px 0px;\n}\n\n@media screen and (max-width:1161px){\n    .subproductcontainer{\n        flex-wrap: wrap;\n    }\n    #datasection{\n        margin-left:10%;\n    }\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9jdXN0b21lck1vZHVsZS9zdWJwcm9kdWN0ZGF0YS9zdWJwcm9kdWN0ZGF0YS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksY0FBYztJQUNkLDhCQUE4QjtJQUM5QixpQkFBaUI7Q0FDcEI7O0FBRUQ7SUFDSSw4QkFBOEI7SUFDOUIsaUJBQWlCO0NBQ3BCOztBQUdEO0lBQ0ksaUJBQWlCO0lBQ2pCLFlBQVk7Q0FDZjs7QUFFRDtJQUNJLFdBQVc7Q0FDZDs7QUFHRDtJQUNJLG1CQUFtQjtJQUNuQixlQUFlO0lBQ2Ysa0JBQWtCO0NBQ3JCOztBQUVEO0lBQ0ksbUJBQW1CO0lBQ25CLFlBQVk7SUFDWixnQkFBZ0I7Q0FDbkI7O0FBRUQ7SUFDSSxrQkFBa0I7RUFDcEIsZUFBZTtDQUNoQjs7QUFFRDtJQUNJLGdCQUFnQjtDQUNuQjs7QUFFRDtJQUNJLGdCQUFnQjtDQUNuQjs7QUFHRDtJQUNJO1FBQ0ksZ0JBQWdCO0tBQ25CO0lBQ0Q7UUFDSSxnQkFBZ0I7S0FDbkI7Q0FDSiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tZXJNb2R1bGUvc3VicHJvZHVjdGRhdGEvc3VicHJvZHVjdGRhdGEuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5zdWJwcm9kdWN0Y29udGFpbmVye1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1hcm91bmQ7XG4gICAgdGV4dC1hbGlnbjogbGVmdDtcbn1cblxuI2JyYW5ke1xuICAgIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjNjY2O1xuICAgIGZvbnQtc2l6ZTowLjhyZW07XG59XG5cblxuI2ltYWdlc2VjdGlvbntcbiAgICBtYXJnaW46IDBweCAyMHB4O1xuICAgIHdpZHRoOiAxMDAlO1xufVxuXG4jZGF0YXNlY3Rpb257XG4gICAgd2lkdGg6MTAwJTtcbn1cblxuXG4jZGlzY3tcbiAgICBtYXJnaW4tbGVmdDowLjVyZW07XG4gICAgY29sb3I6ICNiYTUyNTI7XG4gICAgZm9udC1zaXplOiAwLjdyZW07XG59XG5cbiNwcmljZXtcbiAgICBtYXJnaW4tbGVmdDowLjVyZW07XG4gICAgY29sb3I6ICMyMjI7XG4gICAgZm9udC1zaXplOiAxcmVtO1xufVxuXG4uZ3JheXRleHR7XG4gICAgZm9udC1zaXplOiAwLjdyZW07XG4gIGNvbG9yOiAjNjc2NzY4O1xufVxuXG4jY2FydGFkZHNlY3Rpb257XG4gICAgbWFyZ2luOjEwcHggMHB4O1xufVxuXG4jYW10aGVhZGluZ3tcbiAgICBtYXJnaW46MTBweCAwcHg7XG59XG5cblxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDoxMTYxcHgpe1xuICAgIC5zdWJwcm9kdWN0Y29udGFpbmVye1xuICAgICAgICBmbGV4LXdyYXA6IHdyYXA7XG4gICAgfVxuICAgICNkYXRhc2VjdGlvbntcbiAgICAgICAgbWFyZ2luLWxlZnQ6MTAlO1xuICAgIH1cbn1cbiJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/subproductdata/subproductdata.component.html":
+/*!*************************************************************************************!*\
+  !*** ./src/app/modules/customerModule/subproductdata/subproductdata.component.html ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div *ngIf='subproduct!=null' class='subproductcontainer'>\n<div id='imagesection'>\n    <cust-product-image [imagesArray]='subproduct.imageUrls'></cust-product-image>\n</div>\n<div id='datasection' *ngIf='selectedAmt!=null'>\n  <div id='header'>\n    <div >\n      <span id='brand'>{{subproduct.info.brand | titlecase}}</span>\n    </div>\n    <div id='amtname'>\n   <span>{{subproduct.subproductName | titlecase}}, {{selectedAmt.amount}}{{selectedAmt.suffix | titlecase}}</span>\n    </div>\n    <div>\n     <span class='graytext'> MRP:<del>Rs{{selectedAmt.price}}</del></span><span id='price'>Price:Rs{{sellprice}}</span><span id='disc'>You Save:{{selectedAmt.discount}}<span class='graytext'>(Inclusive of all taxes)</span></span>\n    </div>\n  </div>\n  <div id='cartaddsection' *ngIf='selectedAmt!=null'>\n      <div *ngIf=\"selectedAmt.instock=='true'\">\n          <adddel [product]='subproduct' [productCart]='sendCartpd' [stackTrace]='stackTrace' (amountChange)=\"setAmtOption($event)\"\n          ></adddel>\n      </div>\n      <div class='stock' *ngIf=\"selectedAmt.instock=='false'\">\n        Out Of Stock\n      </div>\n  </div>\n  <div id=\"deliversection\">\n<div><span class='graytext'>Express Delivery: <span *ngIf='subproduct.info.isExpress==true'>In 90 Hrs</span><span *ngIf='subproduct.info.isExpress==false'>Out Of Stock</span></span></div>\n<div><span class='graytext'>Standard Delivery: Tommorrow 9:00 - 10:30</span></div>\n  </div>\n  <div>\n    <div id='amtheading'>\nPack Sizes\n    </div>\n    <div>\n      <div *ngFor='let amtobj of subproduct.info.priceAndAmount'>\n          <cust-subproduct-amt-price  [Amtpiceobj]='amtobj' (selectAmt)='readyTheAmount($event)'> </cust-subproduct-amt-price>\n      </div>\n    </div>\n  </div>\n</div>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/subproductdata/subproductdata.component.ts":
+/*!***********************************************************************************!*\
+  !*** ./src/app/modules/customerModule/subproductdata/subproductdata.component.ts ***!
+  \***********************************************************************************/
+/*! exports provided: SubproductdataComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubproductdataComponent", function() { return SubproductdataComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../moduleServices/productCartDto */ "./src/app/modules/customerModule/moduleServices/productCartDto.ts");
+/* harmony import */ var src_app_globalmodel_cartProduct__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/globalmodel/cartProduct */ "./src/app/globalmodel/cartProduct.ts");
+
+
+
+
+var SubproductdataComponent = /** @class */ (function () {
+    function SubproductdataComponent(cartdto) {
+        this.cartdto = cartdto;
+        this.subproduct = null;
+        this.selectedAmt = null;
+        this.discount = null;
+        this.sellprice = null;
+        this.stackTrace = null;
+        this.sendCartpd = null;
+        this.isAlreadyAdd = false;
+        this.addedProducts = [];
+    }
+    SubproductdataComponent.prototype.setCartProduct = function (cartobj, cartproductId, quantity) {
+        //console.log(cartobj);
+        this.sendCartpd = new src_app_globalmodel_cartProduct__WEBPACK_IMPORTED_MODULE_3__["cartProduct"]();
+        this.sendCartpd.Amt = cartobj.amount;
+        this.sendCartpd.Qua = quantity;
+        //set the cartProduct to send to the database
+        //console.log(cartproductId); 
+        this.sendCartpd.CartPId = cartproductId;
+        this.sendCartpd.Suffix = cartobj.suffix;
+        this.sendCartpd.SubPId = this.subproduct.subproductId;
+        this.sendCartpd.SubPName = this.subproduct.subproductName;
+    };
+    SubproductdataComponent.prototype.selectThisAmount = function (amount) {
+        console.log(amount);
+        this.selectedAmt = amount;
+        this.discount = parseFloat(amount.discount).toString();
+        this.sellprice = ((parseFloat(amount.price) - (0.01 * parseInt(amount.discount) * parseFloat(amount.price))).toFixed(2));
+    };
+    SubproductdataComponent.prototype.repetitiveCheck = function (amountobj) {
+        //console.log(amountobj);
+        for (var _i = 0, _a = this.addedProducts; _i < _a.length; _i++) {
+            var obj = _a[_i];
+            if (obj.subproductId == this.subproduct.subproductId && obj.amount == amountobj.amount &&
+                obj.suffix == amountobj.suffix) {
+                //console.log(obj);
+                this.setCartProduct(obj, obj.cartProductId, obj.quantity);
+                return true;
+            }
+        }
+        return false;
+    };
+    SubproductdataComponent.prototype.readyTheAmount = function (amountobj) {
+        this.selectThisAmount(amountobj);
+        if (this.repetitiveCheck(amountobj) == false) {
+            this.setCartProduct(amountobj, null, 0);
+        }
+    };
+    SubproductdataComponent.prototype.initializecheckIfAdded = function (amountobj) {
+        for (var _i = 0, _a = this.addedProducts; _i < _a.length; _i++) {
+            var obj = _a[_i];
+            if (obj.subproductId == this.subproduct.subproductId && obj.amount == amountobj.amount &&
+                obj.suffix == amountobj.suffix) {
+                amountobj.isadded = true;
+                if (this.selectedAmt == null) {
+                    this.selectThisAmount(amountobj);
+                    this.setCartProduct(obj, obj.cartProductId, obj.quantity);
+                }
+                else if (this.selectedAmt.amount == obj.amount && this.selectedAmt.suffix == obj.suffix) {
+                    this.setCartProduct(obj, obj.cartProductId, obj.quantity);
+                }
+            }
+        }
+    };
+    SubproductdataComponent.prototype.setStackTrace = function () {
+        this.stackTrace = [];
+        this.stackTrace.push(this.subproduct.categoryId);
+        this.stackTrace.push(this.subproduct.subcategoryId);
+        this.stackTrace.push(this.subproduct.productId);
+        this.stackTrace.push(this.subproduct.subproductId);
+        //console.log(this.selectedAmt,this.stackTrace);
+    };
+    SubproductdataComponent.prototype.initialize = function () {
+        for (var _i = 0, _a = this.subproduct.info.priceAndAmount; _i < _a.length; _i++) {
+            var obj = _a[_i];
+            obj.isadded = false;
+            this.initializecheckIfAdded(obj);
+        }
+        if (this.selectedAmt == null) {
+            this.selectThisAmount(this.subproduct.info.priceAndAmount[0]);
+            this.setCartProduct(this.subproduct.info.priceAndAmount[0], null, 0);
+        }
+        this.setStackTrace();
+    };
+    SubproductdataComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        //console.log(this.subproduct)
+        this.cartdto.returncartdto().subscribe(function (data) {
+            //console.log(data);
+            if (data.length != 0 && data[0] != 'Empty') {
+                //console.log('yo');
+                _this.addedProducts = data;
+                _this.initialize();
+            }
+            if (data[0] == 'Empty') {
+                _this.addedProducts = [];
+                for (var _i = 0, _a = _this.subproduct.info.priceAndAmount; _i < _a.length; _i++) {
+                    var obj = _a[_i];
+                    obj.isadded = false;
+                    // this.initializecheckIfAdded(obj)
+                }
+                _this.setStackTrace();
+                _this.selectThisAmount(_this.subproduct.info.priceAndAmount[0]);
+                _this.setCartProduct(_this.subproduct.info.priceAndAmount[0], null, 0);
+            }
+        });
+    };
+    SubproductdataComponent.prototype.setAmtOption = function (data) {
+        if (data != 0) {
+            //console.log(data);
+        }
+    };
+    SubproductdataComponent.prototype.ngOnDestroy = function () {
+        // this.cartdto.returncartdto().unsubscribe();
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], SubproductdataComponent.prototype, "subproduct", void 0);
+    SubproductdataComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'cust-subproductdata',
+            template: __webpack_require__(/*! ./subproductdata.component.html */ "./src/app/modules/customerModule/subproductdata/subproductdata.component.html"),
+            styles: [__webpack_require__(/*! ./subproductdata.component.css */ "./src/app/modules/customerModule/subproductdata/subproductdata.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_2__["productCardDTO"]])
+    ], SubproductdataComponent);
+    return SubproductdataComponent;
 }());
 
 
@@ -6571,6 +7063,127 @@ var TimeLineComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/customerModule/view-all/indview/indview.component.css":
+/*!*******************************************************************************!*\
+  !*** ./src/app/modules/customerModule/view-all/indview/indview.component.css ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tZXJNb2R1bGUvdmlldy1hbGwvaW5kdmlldy9pbmR2aWV3LmNvbXBvbmVudC5jc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/view-all/indview/indview.component.html":
+/*!********************************************************************************!*\
+  !*** ./src/app/modules/customerModule/view-all/indview/indview.component.html ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  indview works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/view-all/indview/indview.component.ts":
+/*!******************************************************************************!*\
+  !*** ./src/app/modules/customerModule/view-all/indview/indview.component.ts ***!
+  \******************************************************************************/
+/*! exports provided: IndviewComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IndviewComponent", function() { return IndviewComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var IndviewComponent = /** @class */ (function () {
+    function IndviewComponent() {
+    }
+    IndviewComponent.prototype.ngOnInit = function () {
+    };
+    IndviewComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-indview',
+            template: __webpack_require__(/*! ./indview.component.html */ "./src/app/modules/customerModule/view-all/indview/indview.component.html"),
+            styles: [__webpack_require__(/*! ./indview.component.css */ "./src/app/modules/customerModule/view-all/indview/indview.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], IndviewComponent);
+    return IndviewComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/view-all/view-all.component.css":
+/*!************************************************************************!*\
+  !*** ./src/app/modules/customerModule/view-all/view-all.component.css ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tZXJNb2R1bGUvdmlldy1hbGwvdmlldy1hbGwuY29tcG9uZW50LmNzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/view-all/view-all.component.html":
+/*!*************************************************************************!*\
+  !*** ./src/app/modules/customerModule/view-all/view-all.component.html ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  view-all works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/customerModule/view-all/view-all.component.ts":
+/*!***********************************************************************!*\
+  !*** ./src/app/modules/customerModule/view-all/view-all.component.ts ***!
+  \***********************************************************************/
+/*! exports provided: ViewAllComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ViewAllComponent", function() { return ViewAllComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var src_app_globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/globalServices/categorylistjson */ "./src/app/globalServices/categorylistjson.ts");
+
+
+
+var ViewAllComponent = /** @class */ (function () {
+    function ViewAllComponent(productlist) {
+        this.productlist = productlist;
+    }
+    ViewAllComponent.prototype.ngOnInit = function () {
+        this.productlist.jsonretrieve().subscribe(function (data) {
+            console.log(data);
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    ViewAllComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'cust-view-all',
+            template: __webpack_require__(/*! ./view-all.component.html */ "./src/app/modules/customerModule/view-all/view-all.component.html"),
+            providers: [src_app_globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__["CategoryJsonretriever"]],
+            styles: [__webpack_require__(/*! ./view-all.component.css */ "./src/app/modules/customerModule/view-all/view-all.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_globalServices_categorylistjson__WEBPACK_IMPORTED_MODULE_2__["CategoryJsonretriever"]])
+    ], ViewAllComponent);
+    return ViewAllComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/customerModule/voucher-data/services/voucherCrud.ts":
 /*!*****************************************************************************!*\
   !*** ./src/app/modules/customerModule/voucher-data/services/voucherCrud.ts ***!
@@ -6588,6 +7201,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -6605,8 +7220,11 @@ var VoucherCrud = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["throwError"])(err);
     };
@@ -6689,7 +7307,12 @@ var VoucherDataComponent = /** @class */ (function () {
                     alert('Unknown Error');
                 }
             }, function (err) {
-                alert(err.message);
+                if (err.message != null) {
+                    alert(err.message);
+                }
+                else {
+                    alert(err);
+                }
             });
         }
         this.displayTC = !this.displayTC;
@@ -8426,7 +9049,7 @@ var SharedModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#choosesection{\n    width:auto;\n  \n}\n\n.flexcontainer{\n    display: flex;\n    justify-content: space-around;\n}\n\n.cart{\n    background-color:#84C234;\n    cursor:pointer;\n    vertical-align: baseline;\n}\n\n.cart:hover{\n    background-color:green;\n}\n\n.cart button{\n    background-color:#84C234;\n    vertical-align: middle;\n    cursor: pointer;\n}\n\n.cart #carticon{\n    padding-top:2px;\n    vertical-align: middle;\n    border-radius:5%;\n}\n\n#inputcontainer{\n    width:50%;\n}\n\n#choosesection ::ng-deep .mat-form-field-infix{\n    width:auto;\n   \n}\n\n#choosesection ::ng-deep .mat-form-field-label{\ndisplay:none;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9zaGFyZWRNb2R1bGUvc2hhcmVkY29tcG9uZW50L2FkZERlbGV0ZU9wdGlvbnMvYWRkZGVsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxXQUFXOztDQUVkOztBQUVEO0lBQ0ksY0FBYztJQUNkLDhCQUE4QjtDQUNqQzs7QUFFRDtJQUNJLHlCQUF5QjtJQUN6QixlQUFlO0lBQ2YseUJBQXlCO0NBQzVCOztBQUVEO0lBQ0ksdUJBQXVCO0NBQzFCOztBQUVEO0lBQ0kseUJBQXlCO0lBQ3pCLHVCQUF1QjtJQUN2QixnQkFBZ0I7Q0FDbkI7O0FBR0Q7SUFDSSxnQkFBZ0I7SUFDaEIsdUJBQXVCO0lBQ3ZCLGlCQUFpQjtDQUNwQjs7QUFDRDtJQUNJLFVBQVU7Q0FDYjs7QUFDRDtJQUNJLFdBQVc7O0NBRWQ7O0FBQ0Q7QUFDQSxhQUFhO0NBQ1oiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL3NoYXJlZE1vZHVsZS9zaGFyZWRjb21wb25lbnQvYWRkRGVsZXRlT3B0aW9ucy9hZGRkZWwuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNjaG9vc2VzZWN0aW9ue1xuICAgIHdpZHRoOmF1dG87XG4gIFxufVxuXG4uZmxleGNvbnRhaW5lcntcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYXJvdW5kO1xufVxuXG4uY2FydHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiM4NEMyMzQ7XG4gICAgY3Vyc29yOnBvaW50ZXI7XG4gICAgdmVydGljYWwtYWxpZ246IGJhc2VsaW5lO1xufVxuXG4uY2FydDpob3ZlcntcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOmdyZWVuO1xufVxuXG4uY2FydCBidXR0b257XG4gICAgYmFja2dyb3VuZC1jb2xvcjojODRDMjM0O1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4gXG4uY2FydCAjY2FydGljb257XG4gICAgcGFkZGluZy10b3A6MnB4O1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG4gICAgYm9yZGVyLXJhZGl1czo1JTtcbn1cbiNpbnB1dGNvbnRhaW5lcntcbiAgICB3aWR0aDo1MCU7XG59XG4jY2hvb3Nlc2VjdGlvbiA6Om5nLWRlZXAgLm1hdC1mb3JtLWZpZWxkLWluZml4e1xuICAgIHdpZHRoOmF1dG87XG4gICBcbn1cbiNjaG9vc2VzZWN0aW9uIDo6bmctZGVlcCAubWF0LWZvcm0tZmllbGQtbGFiZWx7XG5kaXNwbGF5Om5vbmU7XG59Il19 */"
+module.exports = "#choosesection{\n    width:auto;\n  \n}\n\n.flexcontainer{\n    display: flex;\n    justify-content: space-around;\n}\n\n.cart{\n    background-color:#84C234;\n    cursor:pointer;\n    vertical-align: baseline;\n}\n\n.cart:hover{\n    background-color:green;\n}\n\n.cart button{\n    background-color:#84C234;\n    vertical-align: middle;\n    cursor: pointer;\n}\n\n.cart #carticon{\n    padding-top:2px;\n    vertical-align: middle;\n    border-radius:5%;\n}\n\n#inputcontainer{\n    width:50%;\n}\n\n#choosesection ::ng-deep .mat-form-field-infix{\n    width:auto;\n   \n}\n\n#choosesection ::ng-deep .mat-form-field-label{\ndisplay:none;\n}\n\n#small{\n    width:100%;\n    text-align: center;\n    font-weight: 600;\n    \n   \n}\n\n#changeinputcontainer{\n    width:50px;\n    margin:0px 10px;\n}\n\n#changeinputcontainer ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline {\n    bottom: .25em;\n}\n\n.anotherflexcontainer{\n    display: flex;\n}\n\n.addbtn{\n    cursor: pointer;\n    margin: 0 5px;\n    background: #84c225;\n    color: #fff;\n    border: 1px solid #84c225;\n    border-radius: 3px;\n    padding: 11px 30px;\n}\n\n.add{\n    border-radius: .3rem;\n    border: 1px solid #9cc63d;\n    height: 4rem;\n    width: 4rem;\n    text-align: center;\n}\n\n.delete{\n    border-radius: .3rem;\n    border: 1px solid #9cc63d;\n    height: 4rem;\n    width: 4rem;\n    text-align: center;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9zaGFyZWRNb2R1bGUvc2hhcmVkY29tcG9uZW50L2FkZERlbGV0ZU9wdGlvbnMvYWRkZGVsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxXQUFXOztDQUVkOztBQUVEO0lBQ0ksY0FBYztJQUNkLDhCQUE4QjtDQUNqQzs7QUFFRDtJQUNJLHlCQUF5QjtJQUN6QixlQUFlO0lBQ2YseUJBQXlCO0NBQzVCOztBQUVEO0lBQ0ksdUJBQXVCO0NBQzFCOztBQUVEO0lBQ0kseUJBQXlCO0lBQ3pCLHVCQUF1QjtJQUN2QixnQkFBZ0I7Q0FDbkI7O0FBR0Q7SUFDSSxnQkFBZ0I7SUFDaEIsdUJBQXVCO0lBQ3ZCLGlCQUFpQjtDQUNwQjs7QUFDRDtJQUNJLFVBQVU7Q0FDYjs7QUFDRDtJQUNJLFdBQVc7O0NBRWQ7O0FBQ0Q7QUFDQSxhQUFhO0NBQ1o7O0FBQ0Q7SUFDSSxXQUFXO0lBQ1gsbUJBQW1CO0lBQ25CLGlCQUFpQjs7O0NBR3BCOztBQUVEO0lBQ0ksV0FBVztJQUNYLGdCQUFnQjtDQUNuQjs7QUFFRDtJQUNJLGNBQWM7Q0FDakI7O0FBRUQ7SUFDSSxjQUFjO0NBQ2pCOztBQUVEO0lBQ0ksZ0JBQWdCO0lBQ2hCLGNBQWM7SUFDZCxvQkFBb0I7SUFDcEIsWUFBWTtJQUNaLDBCQUEwQjtJQUMxQixtQkFBbUI7SUFDbkIsbUJBQW1CO0NBQ3RCOztBQUVEO0lBQ0kscUJBQXFCO0lBQ3JCLDBCQUEwQjtJQUMxQixhQUFhO0lBQ2IsWUFBWTtJQUNaLG1CQUFtQjtDQUN0Qjs7QUFFRDtJQUNJLHFCQUFxQjtJQUNyQiwwQkFBMEI7SUFDMUIsYUFBYTtJQUNiLFlBQVk7SUFDWixtQkFBbUI7Q0FDdEIiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL3NoYXJlZE1vZHVsZS9zaGFyZWRjb21wb25lbnQvYWRkRGVsZXRlT3B0aW9ucy9hZGRkZWwuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNjaG9vc2VzZWN0aW9ue1xuICAgIHdpZHRoOmF1dG87XG4gIFxufVxuXG4uZmxleGNvbnRhaW5lcntcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYXJvdW5kO1xufVxuXG4uY2FydHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiM4NEMyMzQ7XG4gICAgY3Vyc29yOnBvaW50ZXI7XG4gICAgdmVydGljYWwtYWxpZ246IGJhc2VsaW5lO1xufVxuXG4uY2FydDpob3ZlcntcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOmdyZWVuO1xufVxuXG4uY2FydCBidXR0b257XG4gICAgYmFja2dyb3VuZC1jb2xvcjojODRDMjM0O1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4gXG4uY2FydCAjY2FydGljb257XG4gICAgcGFkZGluZy10b3A6MnB4O1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG4gICAgYm9yZGVyLXJhZGl1czo1JTtcbn1cbiNpbnB1dGNvbnRhaW5lcntcbiAgICB3aWR0aDo1MCU7XG59XG4jY2hvb3Nlc2VjdGlvbiA6Om5nLWRlZXAgLm1hdC1mb3JtLWZpZWxkLWluZml4e1xuICAgIHdpZHRoOmF1dG87XG4gICBcbn1cbiNjaG9vc2VzZWN0aW9uIDo6bmctZGVlcCAubWF0LWZvcm0tZmllbGQtbGFiZWx7XG5kaXNwbGF5Om5vbmU7XG59XG4jc21hbGx7XG4gICAgd2lkdGg6MTAwJTtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICBcbiAgIFxufVxuXG4jY2hhbmdlaW5wdXRjb250YWluZXJ7XG4gICAgd2lkdGg6NTBweDtcbiAgICBtYXJnaW46MHB4IDEwcHg7XG59XG5cbiNjaGFuZ2VpbnB1dGNvbnRhaW5lciA6Om5nLWRlZXAgLm1hdC1mb3JtLWZpZWxkLWFwcGVhcmFuY2UtbGVnYWN5IC5tYXQtZm9ybS1maWVsZC11bmRlcmxpbmUge1xuICAgIGJvdHRvbTogLjI1ZW07XG59XG5cbi5hbm90aGVyZmxleGNvbnRhaW5lcntcbiAgICBkaXNwbGF5OiBmbGV4O1xufVxuXG4uYWRkYnRue1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBtYXJnaW46IDAgNXB4O1xuICAgIGJhY2tncm91bmQ6ICM4NGMyMjU7XG4gICAgY29sb3I6ICNmZmY7XG4gICAgYm9yZGVyOiAxcHggc29saWQgIzg0YzIyNTtcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XG4gICAgcGFkZGluZzogMTFweCAzMHB4O1xufVxuXG4uYWRke1xuICAgIGJvcmRlci1yYWRpdXM6IC4zcmVtO1xuICAgIGJvcmRlcjogMXB4IHNvbGlkICM5Y2M2M2Q7XG4gICAgaGVpZ2h0OiA0cmVtO1xuICAgIHdpZHRoOiA0cmVtO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLmRlbGV0ZXtcbiAgICBib3JkZXItcmFkaXVzOiAuM3JlbTtcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjOWNjNjNkO1xuICAgIGhlaWdodDogNHJlbTtcbiAgICB3aWR0aDogNHJlbTtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59Il19 */"
 
 /***/ }),
 
@@ -8437,7 +9060,7 @@ module.exports = "#choosesection{\n    width:auto;\n  \n}\n\n.flexcontainer{\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id='choosesection'>\n        <div class='flexcontainer'>\n        <div>\n          <div class='cart'>\n         <button *ngIf='checkIfAddedIndexZero()'  (click)='deleteFromCart(-1)'>-</button>\n         </div>\n        </div>\n        <div id='inputcontainer'>\n        <mat-form-field>\n           <span id ='prefixqty' *ngIf='isadded!=true'matPrefix>Qty &nbsp;</span> <input matInput type=\"number\" placeholder='Qty' [(ngModel)]=\"currentIndex\" [value]='currentIndex' >\n          \n           </mat-form-field>\n           </div>\n           <div>\n             <div class='cart'>\n         <button *ngIf='!checkIfAddedIndexZero()' (click)='addToCart(currentIndex)'>ADD<mat-icon id='carticon'>shopping_basket</mat-icon></button>\n         </div>\n         <div class='cart'>\n         <button *ngIf='checkIfAddedIndexZero()'  (click)='addToCart(1)'>+</button></div>\n     </div>\n       </div>\n       </div>"
+module.exports = "<div id='choosesection'>\n        <div *ngIf='changeCSS==false' class='flexcontainer'>\n        <div>\n          <div *ngIf='changeCSS==false && checkIfAddedIndexZero()'  class='cart'>\n         <button  (click)='deleteFromCart(-1)'>-</button>\n         </div>\n          \n        </div>\n        <div id='inputcontainer'>\n        <mat-form-field>\n           <span id ='prefixqty' *ngIf='isadded!=true' matPrefix>Qty &nbsp;</span> <input matInput type=\"number\" placeholder='Qty' [(ngModel)]=\"currentIndex\" [value]='currentIndex' >\n          \n           </mat-form-field>\n           </div>\n           <div>\n             <div  *ngIf='changeCSS==false && !checkIfAddedIndexZero()' class='cart'>\n         <button  (click)='addToCart(currentIndex)'>ADD<mat-icon id='carticon'>shopping_basket</mat-icon></button>\n         </div>\n        \n         <div *ngIf='changeCSS==false && checkIfAddedIndexZero()' class='cart'>\n         <button   (click)='addToCart(1)'>+</button></div>\n   </div>\n       </div>\n       <div *ngIf='changeCSS==true' class='anotherflexcontainer'>\n          <div  *ngIf='checkIfAddedIndexZero()'>\n              <button class='delete' mat-button (click)='deleteFromCart(-1)'>-</button>\n          </div>\n          <div id='changeinputcontainer'>\n              <mat-form-field id='small'>\n               <input matInput type=\"number\" placeholder='Qty' [(ngModel)]=\"currentIndex\" [value]='currentIndex' >     \n                 </mat-form-field>\n                 </div>\n                 <div *ngIf='!checkIfAddedIndexZero()'  >\n                    <button class='addbtn' mat-raised-button (click)='addToCart(currentIndex)'>ADD TO BASKET</button>\n                 </div>\n                 <div *ngIf='checkIfAddedIndexZero()' >\n                    <button class='add'  mat-button (click)='addToCart(1)'>+</button></div>\n                </div>\n      \n       </div>"
 
 /***/ }),
 
@@ -8457,6 +9080,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_addelCrud__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/addelCrud */ "./src/app/modules/sharedModule/sharedcomponent/addDeleteOptions/services/addelCrud.ts");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _customerModule_loginSystem_login_signup_login_signup_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../customerModule/loginSystem/login-signup/login-signup.component */ "./src/app/modules/customerModule/loginSystem/login-signup/login-signup.component.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
@@ -8464,14 +9089,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AddDelComponent = /** @class */ (function () {
-    function AddDelComponent(productdto, addelservice, dialog) {
+    function AddDelComponent(productdto, router, addelservice, dialog) {
         this.productdto = productdto;
+        this.router = router;
         this.addelservice = addelservice;
         this.dialog = dialog;
         this.product = null;
         this.stackTrace = null;
         this.amountChange = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.productForCart = null;
+        this.changeCSS = false;
         this.addedIndex = 0;
         this.isadded = false;
     }
@@ -8511,7 +9138,13 @@ var AddDelComponent = /** @class */ (function () {
             data: 0
         });
     };
+    AddDelComponent.prototype.checkChange = function () {
+        return this.changeCSS;
+    };
     AddDelComponent.prototype.ngOnInit = function () {
+        if (this.router.url.indexOf('/pd/') > -1) {
+            this.changeCSS = true;
+        }
         //  console.log(this.productForCart);
         this.intializecheck();
     };
@@ -8543,9 +9176,14 @@ var AddDelComponent = /** @class */ (function () {
                         _this.amountChange.emit(_this.addedIndex); //emit the change has happed for colorchange of product card
                     }
                 }, function (err) {
-                    _this.productForCart.Qua = _this.productForCart.Qua - index;
-                    _this.productForCart.SubT = _this.productForCart.Qua * _this.productForCart.sellPr;
-                    _this.opendialog();
+                    if (err.message != null) {
+                        _this.productForCart.Qua = _this.productForCart.Qua - index;
+                        _this.productForCart.SubT = _this.productForCart.Qua * _this.productForCart.sellPr;
+                        _this.opendialog();
+                    }
+                    else {
+                        alert(err);
+                    }
                 });
             }
             // this.checkIfAddedIndexZero();}
@@ -8563,7 +9201,7 @@ var AddDelComponent = /** @class */ (function () {
             if (localStorage.getItem('custToken') != null) {
                 this.addelservice.cartCrud({ 'crud': 'del', 'stackTrace': this.stackTrace, 'cartProduct': this.productForCart }).subscribe(function (data) {
                     if (data.isDeleted == true) {
-                        //   console.log(data);
+                        console.log(data);
                         _this.addedIndex--;
                         _this.currentIndex = data.cartproduct.quantity; //currentindex is the index returned by the backend and is always equal to 1                                                      //or more and last deleted product is returned of the delted product
                         _this.amountChange.emit(_this.addedIndex);
@@ -8615,7 +9253,7 @@ var AddDelComponent = /** @class */ (function () {
             providers: [_services_addelCrud__WEBPACK_IMPORTED_MODULE_3__["AddDelService"]],
             styles: [__webpack_require__(/*! ./adddel.component.css */ "./src/app/modules/sharedModule/sharedcomponent/addDeleteOptions/adddel.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_modules_customerModule_moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_2__["productCardDTO"], _services_addelCrud__WEBPACK_IMPORTED_MODULE_3__["AddDelService"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDialog"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_modules_customerModule_moduleServices_productCartDto__WEBPACK_IMPORTED_MODULE_2__["productCardDTO"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], _services_addelCrud__WEBPACK_IMPORTED_MODULE_3__["AddDelService"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDialog"]])
     ], AddDelComponent);
     return AddDelComponent;
 }());
@@ -8641,6 +9279,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _globalmodel_headerDetails__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../globalmodel/headerDetails */ "./src/app/globalmodel/headerDetails.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/globalmodel/comments */ "./src/app/globalmodel/comments.ts");
+
 
 
 
@@ -8661,8 +9301,11 @@ var AddDelService = /** @class */ (function () {
         if (error.error instanceof ErrorEvent) {
             err = 'FrontEnd Error';
         }
-        else if (error.status != 200) {
+        else if (error.status != 0) {
             err = error.error;
+        }
+        else {
+            err = src_app_globalmodel_comments__WEBPACK_IMPORTED_MODULE_7__["comments"].networkError;
         }
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["throwError"])(err);
     };
@@ -8986,7 +9629,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/anmolrajarora/Downloads/BigBasket/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/anmolrajarora/Downloads/BigBasket 2/src/main.ts */"./src/main.ts");
 
 
 /***/ })

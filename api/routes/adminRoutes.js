@@ -188,6 +188,7 @@ adminRoutes.post('/upload',function(req,res){
                                 info:{
                                     isExpress:subproduct.isExpress,
                                     brand:subproduct.brand,
+                                    storageAndUses:subproduct.storageAndUses,
                                     description:subproduct.description,
                                     benefitsAndUses:subproduct.benefitsanduses,
                                     priceAndAmount:[]
@@ -395,6 +396,7 @@ adminRoutes.post('/editCategoryList',jwtVerification.verifyToken,(req,res)=>{
                                     info:{
                                         isExpress:subproduct.info.isExpress,
                                         brand:subproduct.info.brand,
+                                        storageAndUses:subproduct.info.storageAndUses,
                                         description:subproduct.info.description,
                                         benefitsAndUses:subproduct.info.benefitsAndUses,
                                         priceAndAmount:priceArray,

@@ -449,7 +449,8 @@ return status;
           
         }
     }
-    if(order.delievAddress.addId==null){
+
+    if(order.delievAddress==null || order.delievAddress.addId==null ){
     return callback('No Address Found');
    }
 

@@ -254,6 +254,7 @@ res.status(409).json({status:config.EMPTY,message:'No Data Found'});
 
             "info.isExpress":req.body.isExpress,
             "info.brand":req.body.brand,
+            "info.storageAndUses":req.body.storageAndUses,
          "info.description":req.body.description,
         "info.benefitsAndUses":req.body.benefitsAndUses,
         "info.priceAndAmount":req.body.priceAndAmount,
@@ -459,6 +460,7 @@ getSubProductsArray(){
                                 
                                 brand:obj.info.brand,
                                 isExpress:obj.info.isExpress,
+                                storageAndUses:obj.info.storageAndUses,
                                 description:obj.info.description,
                                 benefitsAndUses:obj.info.benefitsAndUses,
                                 priceAndAmount:priceArray,
