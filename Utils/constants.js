@@ -1,0 +1,7 @@
+const CONSTANTS={
+
+DEFAULTMAXLEVEL:4
+
+}
+
+module.exports=CONSTANTS;

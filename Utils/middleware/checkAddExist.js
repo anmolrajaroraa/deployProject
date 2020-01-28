@@ -1,0 +1,1 @@
+"<html><head><title>Merchant Checkout Page</title></head><body><center><h1>Please do not refresh this page...</h1></center><form method='post' action='"+txn_url+"' name='f1'>"+form_fields+"</form><script type='text/javascript'>document.f1.submit();</script></body></html>"

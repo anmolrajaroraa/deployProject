@@ -1,0 +1,57 @@
+const express=require("express");
+const path=require("path");
+const cors=require("cors");
+const handleError=require("./Utils/errorHandler");
+const app=express();
+const passport = require('passport');
+console.log('req is here');
+
+const port=process.env.PORT||1234;
+app.use(cors());
+
+app.use(express.static(path.join(__dirname, 'public')));
+const googlePassport=require('./Utils/passport/googlepassport');
+const facebookPassport =require('./Utils/passport/facebookpassport');
+app.use(passport.initialize());
+const bodyParser=require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+const empRoutes=require('./api/routes/empRoutes');   //require routes
+const adminRoutes=require('./api/routes/adminRoutes');
+const vendorProductRoutes=require('./api/routes/vendorProductsRoutes');
+const productRoutes=require('./api/routes/productRoutes');
+const adRoutes = require('./api/routes/adRoutes');
+const customerRoutes = require('./api/routes/customerRoutes')
+const footerRoutes = require('./api/routes/footerApi');
+const voucherRoutes = require('./api/routes/voucherApi');
+const templateRoutes = require('./api/routes/templateApi');
+const addressRoutes = require('./api/routes/addressRoutes');
+const timeSlotRoutes = require('./api/routes/timeSlotRoutes');
+const delBoyRoutes = require('./api/routes/delBoyRoutes');
+app.use('/delBoy',delBoyRoutes)
+app.use('/timeSlot',timeSlotRoutes);
+app.use('/address',addressRoutes);
+app.use('/template',templateRoutes)
+app.use('/voucher',voucherRoutes);
+app.use('/footer',footerRoutes);
+app.use('/employee',empRoutes); 
+app.use('/admin',adminRoutes);  
+app.use('/products',productRoutes);
+app.use('/vendorProducts',vendorProductRoutes);   
+app.use('/ad',adRoutes);   
+//app.use(passport);
+app.use('/customer',customerRoutes)           //use routes
+app.get('/userPlan',(req,res)=>{
+  
+  
+    res.sendFile(path.join(__dirname,'public','index.html'));
+})
+//app.use('/user');
+
+
+app.use('**',express.static(path.join(__dirname,'public','index.html')));
+
+app.use(handleError);
+
+
+app.listen(port);
